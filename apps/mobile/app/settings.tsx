@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { SettingsRow } from '../src/components/settings/SettingsRow';
@@ -19,7 +20,7 @@ export default function SettingsScreen() {
   const { palette, mode } = useTheme();
   return (
     <Screen>
-      <Pressable onPress={() => router.back()} style={styles.back}><Animated.Text style={[styles.backText, { color: theme.muted }]}>‹  Back</Animated.Text></Pressable>
+      <AnimatedPressable onPress={() => router.back()} style={styles.back}><Animated.Text style={[styles.backText, { color: theme.muted }]}>‹  Back</Animated.Text></AnimatedPressable>
       <SectionLabel>YOUR CONTROL</SectionLabel>
       <Animated.Text style={[styles.title, { color: theme.text }]}>Settings</Animated.Text>
       <NeumorphicSurface style={styles.themeCard} raised>
