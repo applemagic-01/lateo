@@ -22,9 +22,9 @@ export function PrivacyOrbit() {
       <NeumorphicSurface raised style={styles.core}>
         <View style={[styles.dot, { backgroundColor: palette.accent }]} />
       </NeumorphicSurface>
-      <NeumorphicSurface raised style={[styles.node, styles.top]} />
-      <NeumorphicSurface raised style={[styles.node, styles.left]} />
-      <NeumorphicSurface raised style={[styles.node, styles.right]} />
+      <View style={[styles.node, styles.top, { backgroundColor: palette.surface, borderColor: palette.highlight, shadowColor: palette.shadow }]} />
+      <View style={[styles.node, styles.left, { backgroundColor: palette.surface, borderColor: palette.highlight, shadowColor: palette.shadow }]} />
+      <View style={[styles.node, styles.right, { backgroundColor: palette.surface, borderColor: palette.highlight, shadowColor: palette.shadow }]} />
     </View>
   );
 }
@@ -67,6 +67,11 @@ const styles = StyleSheet.create({
     width: 13,
     height: 13,
     borderRadius: 7,
+    borderWidth: 1,
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 3,
   },
   top: { top: 15, right: 45 },
   left: { bottom: 35, left: 25 },
