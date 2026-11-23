@@ -1,12 +1,12 @@
 import { router } from 'expo-router';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { SettingsRow } from '../src/components/settings/SettingsRow';
 import { ThemeToggle } from '../src/components/ui/ThemeToggle';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
 import { useAnimatedTheme, useTheme } from '../src/theme/ThemeProvider';
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const rows = [
   { title: 'Anonymous identity', detail: 'Quiet Orbit' },
