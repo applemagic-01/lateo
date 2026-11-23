@@ -1,11 +1,11 @@
 import { useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, ViewStyle } from 'react-native';
-import { useAnimatedTheme } from '../../theme/ThemeProvider';
+import { useTheme } from '../src/theme/ThemeProvider';
 import { radius } from '../../theme/tokens';
 
 type Props = { label: string; onPress: () => void; variant?: 'primary' | 'secondary' | 'ghost'; rightLabel?: string; style?: ViewStyle };
 export function AppButton({ label, onPress, variant = 'primary', rightLabel, style }: Props) {
-  const theme = useAnimatedTheme();
+  const { palette: theme } = useTheme();
   const scale = useRef(new Animated.Value(1)).current;
   const animate = (to: number) => Animated.spring(scale, { toValue: to, useNativeDriver: true, speed: 24, bounciness: 4 }).start();
   return (
