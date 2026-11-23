@@ -38,20 +38,6 @@ export function useTheme() {
 }
 
 export function useAnimatedTheme() {
-  const { progress } = useTheme();
-  const color = (from: string, to: string) => progress.interpolate({ inputRange: [0, 1], outputRange: [from, to] });
-  return {
-    background: color(dark.background, light.background),
-    surface: color(dark.surface, light.surface),
-    raised: color(dark.raised, light.raised),
-    text: color(dark.text, light.text),
-    muted: color(dark.muted, light.muted),
-    accent: color(dark.accent, light.accent),
-    accentSoft: color(dark.accentSoft, light.accentSoft),
-    accentText: color(dark.accentText, light.accentText),
-    border: color(dark.border, light.border),
-    shadow: color(dark.shadow, light.shadow),
-    highlight: color(dark.highlight, light.highlight),
-    surfaceAlt: color(dark.surfaceAlt, light.surfaceAlt),
-  };
+  const { palette } = useTheme();
+  return palette;
 }
