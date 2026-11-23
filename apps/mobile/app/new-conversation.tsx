@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Share, Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Share, Animated, Pressable, StyleSheet, View } from 'react-native';
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { AppButton } from '../src/components/ui/AppButton';
@@ -8,7 +8,6 @@ import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
 import { useTheme } from '../src/theme/ThemeProvider';
 import { radius } from '../src/theme/tokens';
 import { ThemeToggle } from '../src/components/ui/ThemeToggle';
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Expiry = "1 hour" | "24 hours" | "7 days";
 type IdentityMode = "Persistent" | "Disposable";
@@ -38,17 +37,13 @@ export default function NewConversationScreen() {
   return (
     <Screen>
       <View style={styles.header}>
-        <AnimatedPressable
-          onPress={() => router.back()}
-          style={[
-            styles.back,
-            { backgroundColor: theme.surface, borderColor: theme.border },
-          ]}
-        >
-          <Animated.Text style={[styles.backText, { color: theme.text }]}>
-            ‹
-          </Animated.Text>
-        </AnimatedPressable>
+        <Pressable onPress={() => router.back()} accessibilityLabel="Go back">
+          <NeumorphicSurface inset style={styles.back}>
+            <Animated.Text style={[styles.backText, { color: theme.text }]}>
+              ‹
+            </Animated.Text>
+          </NeumorphicSurface>
+        </Pressable>
         <View style={styles.headerCopy}>
           <SectionLabel>PRIVATE CONNECTION</SectionLabel>
           <Animated.Text style={[styles.title, { color: theme.text }]}>
@@ -81,21 +76,12 @@ export default function NewConversationScreen() {
               {expiryOptions.map((option) => {
                 const selected = expiry === option.label;
                 return (
-                  <AnimatedPressable
+                  <Pressable
                     key={option.label}
                     onPress={() => setExpiry(option.label)}
-                    style={[
-                      styles.option,
-                      {
-                        backgroundColor: theme.surface,
-                        borderColor: theme.border,
-                      },
-                      selected && {
-                        backgroundColor: theme.surfaceAlt,
-                        borderColor: theme.accent,
-                      },
-                    ]}
+                    style={styles.optionPressable}
                   >
+                    <NeumorphicSurface raised={!selected} inset={selected} style={styles.option}>
                     <View style={styles.optionTop}>
                       <Animated.Text
                         style={[
@@ -118,7 +104,8 @@ export default function NewConversationScreen() {
                     >
                       {option.detail}
                     </Animated.Text>
-                  </AnimatedPressable>
+                    </NeumorphicSurface>
+                  </Pressable>
                 );
               })}
             </View>
@@ -131,21 +118,12 @@ export default function NewConversationScreen() {
               {(["Persistent", "Disposable"] as const).map((mode) => {
                 const selected = identity === mode;
                 return (
-                  <AnimatedPressable
+                  <Pressable
                     key={mode}
                     onPress={() => setIdentity(mode)}
-                    style={[
-                      styles.identityOption,
-                      {
-                        backgroundColor: theme.surface,
-                        borderColor: theme.border,
-                      },
-                      selected && {
-                        backgroundColor: theme.surfaceAlt,
-                        borderColor: theme.accent,
-                      },
-                    ]}
+                    style={styles.identityPressable}
                   >
+                    <NeumorphicSurface raised={!selected} inset={selected} style={styles.identityOption}>
                     <Animated.Text
                       style={[styles.identityIcon, { color: theme.accent }]}
                     >
@@ -173,17 +151,13 @@ export default function NewConversationScreen() {
                         ✓
                       </Animated.Text>
                     ) : null}
-                  </AnimatedPressable>
+                    </NeumorphicSurface>
+                  </Pressable>
                 );
               })}
             </View>
           </View>
-          <View
-            style={[
-              styles.notice,
-              { backgroundColor: theme.surfaceAlt, borderColor: theme.border },
-            ]}
-          >
+          <NeumorphicSurface inset style={styles.notice}>
             <Animated.Text
               style={[styles.noticeTitle, { color: theme.warning }]}
             >
@@ -193,7 +167,7 @@ export default function NewConversationScreen() {
               This creates a mock invitation. Real invitation security, expiry
               enforcement, and identity cryptography are not implemented.
             </Animated.Text>
-          </View>
+          </NeumorphicSurface>
           <AppButton
             label="Create invitation"
             rightLabel="→"
@@ -235,12 +209,7 @@ export default function NewConversationScreen() {
               </Animated.Text>
             </View>
           </NeumorphicSurface>
-          <View
-            style={[
-              styles.notice,
-              { backgroundColor: theme.surfaceAlt, borderColor: theme.border },
-            ]}
-          >
+          <NeumorphicSurface inset style={styles.notice}>
             <Animated.Text
               style={[styles.noticeTitle, { color: theme.warning }]}
             >
@@ -250,7 +219,7 @@ export default function NewConversationScreen() {
               This prototype link will not open a conversation. Do not use it
               for sensitive communication.
             </Animated.Text>
-          </View>
+          </NeumorphicSurface>
           <AppButton
             label="Share invitation"
             rightLabel="↗"
@@ -319,11 +288,10 @@ const styles = StyleSheet.create({
   section: { marginTop: 24, gap: 12 },
   sectionTitle: { fontSize: 14, fontWeight: "600" },
   options: { flexDirection: "row", gap: 8 },
+  optionPressable: { flex: 1 },
   option: {
-    flex: 1,
     padding: 12,
     borderRadius: radius.md,
-    borderWidth: 1,
     minHeight: 76,
   },
   optionTop: {
@@ -334,12 +302,12 @@ const styles = StyleSheet.create({
   optionLabel: { fontSize: 13, fontWeight: "600" },
   optionDetail: { fontSize: 10, marginTop: 8 },
   check: { fontSize: 13, fontWeight: "700" },
-  identityOptions: { gap: 8 },
+  identityOptions: { gap: 12 },
+  identityPressable: { width: '100%' },
   identityOption: {
     position: "relative",
     padding: 14,
     paddingRight: 36,
-    borderWidth: 1,
     borderRadius: radius.md,
   },
   identityIcon: { fontSize: 18, marginBottom: 8 },
@@ -349,7 +317,6 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     padding: 13,
     marginVertical: 20,
-    borderWidth: 1,
     gap: 5,
   },
   noticeTitle: { fontSize: 11, fontWeight: "600" },
