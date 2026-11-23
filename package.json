@@ -9,5 +9,8 @@
     "mobile:ios": "pnpm --dir apps/mobile ios",
     "lint": "pnpm --dir apps/mobile lint",
     "typecheck": "pnpm --dir apps/mobile typecheck"
+  },
+  "dependencies": {
+    "react-native-safe-area-context": "^5.11.1"
   }
 }
