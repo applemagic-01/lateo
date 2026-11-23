@@ -26,7 +26,6 @@ export default function NewConversationScreen() {
   );
   const inviteUrl = `https://lateo.example/invite/${inviteCode}`;
   const { palette: theme } = useTheme();
-  
 
   const shareInvite = async () =>
     Share.share({
@@ -176,7 +175,7 @@ export default function NewConversationScreen() {
         </>
       ) : (
         <View style={styles.preview}>
-          <NeumorphicSurface style={styles.successOrb}>
+          <NeumorphicSurface style={styles.successOrb} raised>
             <Animated.Text
               style={[styles.successIcon, { color: theme.success }]}
             >
@@ -251,7 +250,6 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 14,
-    borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
   },
