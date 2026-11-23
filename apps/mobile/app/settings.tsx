@@ -16,8 +16,7 @@ const rows = [
 ];
 
 export default function SettingsScreen() {
-  const { palette: theme } = useTheme();
-  const { palette, mode } = useTheme();
+  const { palette: theme, mode } = useTheme();
   return (
     <Screen>
       <AnimatedPressable onPress={() => router.back()} style={styles.back}><Animated.Text style={[styles.backText, { color: theme.muted }]}>‹  Back</Animated.Text></AnimatedPressable>
@@ -28,9 +27,9 @@ export default function SettingsScreen() {
         <ThemeToggle />
       </NeumorphicSurface>
       <NeumorphicSurface style={styles.card}>
-        {rows.map((row, index) => <View key={row.title} style={index !== rows.length - 1 && [styles.divider, { borderBottomColor: palette.border }]}><SettingsRow title={row.title} detail={row.detail} /></View>)}
+        {rows.map((row, index) => <View key={row.title} style={index !== rows.length - 1 && [styles.divider, { borderBottomColor: theme.border }]}><SettingsRow title={row.title} detail={row.detail} /></View>)}
       </NeumorphicSurface>
-      <View style={[styles.notice, { backgroundColor: palette.surfaceAlt, borderColor: palette.border }]}><Animated.Text style={[styles.noticeTitle, { color: palette.warning }]}>Security status</Animated.Text><Animated.Text style={[styles.noticeBody, { color: theme.muted }]}>This UI is a prototype. Identity, encryption, and privacy controls are not active yet.</Animated.Text></View>
+      <View style={[styles.notice, { backgroundColor: theme.surfaceAlt, borderColor: palette.border }]}><Animated.Text style={[styles.noticeTitle, { color: theme.warning }]}>Security status</Animated.Text><Animated.Text style={[styles.noticeBody, { color: theme.muted }]}>This UI is a prototype. Identity, encryption, and privacy controls are not active yet.</Animated.Text></View>
       <Animated.Text style={[styles.version, { color: theme.muted }]}>LATEO · 0.1.0</Animated.Text>
     </Screen>
   );
