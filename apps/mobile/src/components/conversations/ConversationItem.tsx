@@ -1,5 +1,5 @@
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '../src/theme/ThemeProvider';
+import { useTheme } from '../../theme/ThemeProvider';
 
 export type Conversation = { initials: string; name: string; message: string; time: string; unread: number; color: string };
 export function ConversationItem({ item, onPress }: { item: Conversation; onPress?: () => void }) {
