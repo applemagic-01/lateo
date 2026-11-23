@@ -27,65 +27,33 @@ export function NeumorphicSurface({
   return (
     <View
       style={[
-        styles.shadow,
+        styles.surface,
         {
           borderRadius,
           backgroundColor: inset ? palette.inset : palette.surface,
+          borderTopColor: inset ? palette.border : palette.highlight,
+          borderLeftColor: inset ? palette.border : palette.highlight,
+          borderRightColor: inset ? palette.highlight : palette.border,
+          borderBottomColor: inset ? palette.highlight : palette.border,
           shadowColor: palette.shadow,
-          shadowOpacity: inset ? 0.05 : raised ? 0.52 : 0.32,
+          shadowOpacity: inset ? 0.08 : raised ? 0.28 : 0.17,
           shadowOffset: inset
-            ? { width: -2, height: -2 }
-            : { width: raised ? 8 : 5, height: raised ? 9 : 6 },
-          shadowRadius: inset ? 3 : raised ? 13 : 9,
-          elevation: inset ? 0 : raised ? 7 : 4,
+            ? { width: -1, height: -1 }
+            : { width: 4, height: 5 },
+          shadowRadius: inset ? 3 : raised ? 8 : 6,
+          elevation: inset ? 0 : raised ? 4 : 2,
         },
+        style,
       ]}
     >
-      <View
-        style={[
-          styles.highlight,
-          {
-            borderRadius,
-            backgroundColor: inset ? palette.inset : palette.surface,
-            shadowColor: palette.highlight,
-            shadowOpacity: inset ? 0.1 : 0.34,
-            shadowOffset: inset
-              ? { width: 2, height: 2 }
-              : { width: -6, height: -6 },
-            shadowRadius: inset ? 3 : 10,
-          },
-        ]}
-      >
-        <View
-          style={[
-            styles.face,
-            {
-              borderRadius,
-              backgroundColor: inset ? palette.inset : palette.surface,
-              borderTopColor: inset ? palette.border : palette.highlight,
-              borderLeftColor: inset ? palette.border : palette.highlight,
-              borderRightColor: inset ? palette.highlight : palette.border,
-              borderBottomColor: inset ? palette.highlight : palette.border,
-            },
-            style,
-          ]}
-        >
-          {children}
-        </View>
-      </View>
+      {children}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  shadow: {
-    overflow: 'visible',
-  },
-  highlight: {
-    overflow: 'visible',
-  },
-  face: {
+  surface: {
     borderWidth: 1,
-    overflow: 'hidden',
+    overflow: 'visible',
   },
 });
