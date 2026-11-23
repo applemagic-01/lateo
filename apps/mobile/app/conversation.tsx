@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { Animated, FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { Screen } from '../src/components/ui/Screen';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
 import { ConversationHeader } from '../src/components/messaging/ConversationHeader';
