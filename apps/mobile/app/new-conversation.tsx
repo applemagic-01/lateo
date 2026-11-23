@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { Share, Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { AppButton } from '../src/components/ui/AppButton';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
 import { useAnimatedTheme, useTheme } from '../src/theme/ThemeProvider';
 import { radius } from '../src/theme/tokens';
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Expiry = '1 hour' | '24 hours' | '7 days';
 type IdentityMode = 'Persistent' | 'Disposable';
@@ -27,7 +27,7 @@ export default function NewConversationScreen() {
   return (
     <Screen>
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={[styles.back, { backgroundColor: theme.surface, borderColor: theme.border }]}><Animated.Text style={[styles.backText, { color: theme.text }]}>‹</Animated.Text></Pressable>
+        <AnimatedPressable onPress={() => router.back()} style={[styles.back, { backgroundColor: theme.surface, borderColor: theme.border }]}><Animated.Text style={[styles.backText, { color: theme.text }]}>‹</Animated.Text></AnimatedPressable>
         <View style={styles.headerCopy}><SectionLabel>PRIVATE CONNECTION</SectionLabel><Animated.Text style={[styles.title, { color: theme.text }]}>New conversation</Animated.Text></View>
       </View>
       {!created ? <>
