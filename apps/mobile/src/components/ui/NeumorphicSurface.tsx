@@ -1,5 +1,10 @@
 import { PropsWithChildren } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 
 type Props = PropsWithChildren<{
@@ -15,14 +20,19 @@ export function NeumorphicSurface({
   raised = false,
 }: Props) {
   const { palette } = useTheme();
+  const flattenedStyle = StyleSheet.flatten(style);
+  const borderRadius =
+    flattenedStyle?.borderRadius ?? (inset ? 18 : raised ? 24 : 22);
 
   return (
     <View
       style={[
-        styles.darkShadow,
+        styles.shadow,
         {
+          borderRadius,
+          backgroundColor: inset ? palette.inset : palette.surface,
           shadowColor: palette.shadow,
-          shadowOpacity: inset ? 0.04 : raised ? 0.52 : 0.32,
+          shadowOpacity: inset ? 0.05 : raised ? 0.52 : 0.32,
           shadowOffset: inset
             ? { width: -2, height: -2 }
             : { width: raised ? 8 : 5, height: raised ? 9 : 6 },
@@ -33,10 +43,12 @@ export function NeumorphicSurface({
     >
       <View
         style={[
-          styles.lightShadow,
+          styles.highlight,
           {
+            borderRadius,
+            backgroundColor: inset ? palette.inset : palette.surface,
             shadowColor: palette.highlight,
-            shadowOpacity: inset ? 0.08 : 0.34,
+            shadowOpacity: inset ? 0.1 : 0.34,
             shadowOffset: inset
               ? { width: 2, height: 2 }
               : { width: -6, height: -6 },
@@ -48,14 +60,13 @@ export function NeumorphicSurface({
           style={[
             styles.face,
             {
+              borderRadius,
               backgroundColor: inset ? palette.inset : palette.surface,
               borderTopColor: inset ? palette.border : palette.highlight,
               borderLeftColor: inset ? palette.border : palette.highlight,
               borderRightColor: inset ? palette.highlight : palette.border,
               borderBottomColor: inset ? palette.highlight : palette.border,
             },
-            raised && styles.raised,
-            inset && styles.inset,
             style,
           ]}
         >
@@ -67,23 +78,14 @@ export function NeumorphicSurface({
 }
 
 const styles = StyleSheet.create({
-  darkShadow: {
-    borderRadius: 22,
+  shadow: {
     overflow: 'visible',
   },
-  lightShadow: {
-    borderRadius: 22,
+  highlight: {
     overflow: 'visible',
   },
   face: {
     borderWidth: 1,
-    borderRadius: 22,
     overflow: 'hidden',
-  },
-  raised: {
-    borderRadius: 24,
-  },
-  inset: {
-    borderRadius: 18,
   },
 });
