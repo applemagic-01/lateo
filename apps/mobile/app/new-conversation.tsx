@@ -5,7 +5,7 @@ import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { AppButton } from '../src/components/ui/AppButton';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
-import { useAnimatedTheme } from '../src/theme/ThemeProvider';
+import { useTheme } from '../src/theme/ThemeProvider';
 import { radius } from '../src/theme/tokens';
 import { ThemeToggle } from '../src/components/ui/ThemeToggle';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -20,7 +20,7 @@ export default function NewConversationScreen() {
   const [created, setCreated] = useState(false);
   const [inviteCode] = useState(() => Math.random().toString(36).slice(2, 10).toUpperCase());
   const inviteUrl = `https://lateo.example/invite/${inviteCode}`;
-  const theme = useAnimatedTheme();
+  const { palette: theme } = useTheme();
   
 
   const shareInvite = async () => Share.share({ message: `Join me on LATEO. This prototype invitation is not secure or functional yet: ${inviteUrl}`, url: inviteUrl });
