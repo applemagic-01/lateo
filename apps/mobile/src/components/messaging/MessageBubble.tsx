@@ -14,7 +14,7 @@ export function MessageBubble({ message }: { message: ChatMessage }) {
   const { palette } = useTheme();
 
   return (
-    <View style={[styles.row, message.mine && styles.mineRow]}>
+    <View style={[styles.row, message.mine ? styles.mineRow : styles.theirsRow]}>
       <NeumorphicSurface
         inset={!message.mine}
         raised={message.mine}
@@ -22,10 +22,10 @@ export function MessageBubble({ message }: { message: ChatMessage }) {
           styles.bubble,
           message.mine && {
             backgroundColor: palette.accent,
-            borderTopColor: '#FA858A',
-            borderLeftColor: '#FA858A',
-            borderRightColor: '#B83D46',
-            borderBottomColor: '#B83D46',
+            borderTopColor: '#F0787F',
+            borderLeftColor: '#F0787F',
+            borderRightColor: '#A9343E',
+            borderBottomColor: '#A9343E',
           },
         ]}
       >
@@ -41,7 +41,7 @@ export function MessageBubble({ message }: { message: ChatMessage }) {
           <Animated.Text
             style={[
               styles.time,
-              { color: message.mine ? '#FFE5E6' : palette.muted },
+              { color: message.mine ? '#FCE7E8' : palette.muted },
             ]}
           >
             {message.time}
@@ -59,14 +59,16 @@ export function MessageBubble({ message }: { message: ChatMessage }) {
 
 const styles = StyleSheet.create({
   row: {
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'flex-start',
     marginVertical: 7,
-    paddingHorizontal: 2,
+    paddingHorizontal: 5,
   },
   mineRow: { justifyContent: 'flex-end' },
+  theirsRow: { justifyContent: 'flex-start' },
   bubble: {
-    maxWidth: '82%',
+    maxWidth: '86%',
+    minWidth: 116,
     paddingHorizontal: 15,
     paddingVertical: 11,
     borderRadius: 19,
