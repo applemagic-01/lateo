@@ -1,24 +1,106 @@
-import { useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text, ViewStyle } from 'react-native';
+import { useRef, useState } from 'react';
+import { Animated, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius } from '../../theme/tokens';
+import { NeumorphicSurface } from './NeumorphicSurface';
 
-type Props = { label: string; onPress: () => void; variant?: 'primary' | 'secondary' | 'ghost'; rightLabel?: string; style?: ViewStyle };
-export function AppButton({ label, onPress, variant = 'primary', rightLabel, style }: Props) {
-  const { palette: theme } = useTheme();
+type Props = {
+  label: string;
+  onPress: () => void;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  rightLabel?: string;
+  style?: ViewStyle;
+};
+
+export function AppButton({
+  label,
+  onPress,
+  variant = 'primary',
+  rightLabel,
+  style,
+}: Props) {
+  const { palette } = useTheme();
+  const [pressed, setPressed] = useState(false);
   const scale = useRef(new Animated.Value(1)).current;
-  const animate = (to: number) => Animated.spring(scale, { toValue: to, useNativeDriver: true, speed: 24, bounciness: 4 }).start();
+
+  const animate = (to: number) =>
+    Animated.spring(scale, {
+      toValue: to,
+      useNativeDriver: true,
+      speed: 24,
+      bounciness: 3,
+    }).start();
+
+  const isPrimary = variant === 'primary';
+  const isGhost = variant === 'ghost';
+
+  const labelColor = isPrimary ? '#FFFFFF' : palette.text;
+
   return (
-    <Animated.View style={[{ transform: [{ scale }] }, style]}>
-      <Pressable accessibilityRole="button" onPress={onPress} onPressIn={() => animate(0.975)} onPressOut={() => animate(1)} style={[styles.base, { backgroundColor: variant === 'primary' ? theme.accentSoft : variant === 'secondary' ? theme.surface : 'transparent', borderColor: theme.border, shadowColor: theme.shadow }, variant === 'secondary' && styles.secondary, variant === 'primary' && styles.primary, variant === 'ghost' && styles.ghost]}>
-        <Animated.Text style={[styles.label, { color: variant === 'primary' ? theme.accentText : theme.text }]}>{label}</Animated.Text>
-        {rightLabel ? <Animated.Text style={[styles.right, { color: variant === 'primary' ? theme.accentText : theme.text }]}>{rightLabel}</Animated.Text> : null}
+    <Animated.View style={[styles.wrapper, { transform: [{ scale }] }, style]}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        onPressIn={() => {
+          setPressed(true);
+          animate(0.98);
+        }}
+        onPressOut={() => {
+          setPressed(false);
+          animate(1);
+        }}
+      >
+        {isGhost ? (
+          <Animated.Text style={[styles.ghostLabel, { color: palette.accent }]}>
+            {label}{rightLabel ? `  ${rightLabel}` : ''}
+          </Animated.Text>
+        ) : (
+          <NeumorphicSurface
+            raised={!pressed}
+            inset={pressed}
+            style={[
+              styles.surface,
+              isPrimary && {
+                backgroundColor: palette.accent,
+                borderTopColor: '#FA858A',
+                borderLeftColor: '#FA858A',
+                borderRightColor: '#B83D46',
+                borderBottomColor: '#B83D46',
+              },
+            ]}
+          >
+            <Animated.Text style={[styles.label, { color: labelColor }]}>
+              {label}
+            </Animated.Text>
+            {rightLabel ? (
+              <Animated.Text style={[styles.right, { color: labelColor }]}>
+                {rightLabel}
+              </Animated.Text>
+            ) : null}
+          </NeumorphicSurface>
+        )}
       </Pressable>
     </Animated.View>
   );
 }
+
 const styles = StyleSheet.create({
-  base: { minHeight: 54, borderRadius: radius.md, paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, shadowOffset: { width: 3, height: 4 }, shadowOpacity: 0.16, shadowRadius: 6, elevation: 2 },
-  primary: { borderColor: 'transparent' }, secondary: {}, ghost: { borderWidth: 0, shadowOpacity: 0, elevation: 0 },
-  label: { fontSize: 15, fontWeight: '600' }, right: { fontSize: 20 },
+  wrapper: { width: '100%' },
+  surface: {
+    minHeight: 54,
+    borderRadius: radius.md,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  label: { fontSize: 14, fontWeight: '700', letterSpacing: 0.2 },
+  right: { fontSize: 20, fontWeight: '500' },
+  ghostLabel: {
+    minHeight: 42,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 13,
+    fontWeight: '600',
+  },
 });
