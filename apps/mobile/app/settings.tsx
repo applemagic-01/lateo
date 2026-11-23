@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { SettingsRow } from '../src/components/settings/SettingsRow';
@@ -29,7 +29,10 @@ export default function SettingsScreen() {
       <NeumorphicSurface style={styles.card}>
         {rows.map((row, index) => <View key={row.title} style={index !== rows.length - 1 && [styles.divider, { borderBottomColor: theme.border }]}><SettingsRow title={row.title} detail={row.detail} /></View>)}
       </NeumorphicSurface>
-      <View style={[styles.notice, { backgroundColor: theme.surfaceAlt, borderColor: palette.border }]}><Animated.Text style={[styles.noticeTitle, { color: theme.warning }]}>Security status</Animated.Text><Animated.Text style={[styles.noticeBody, { color: theme.muted }]}>This UI is a prototype. Identity, encryption, and privacy controls are not active yet.</Animated.Text></View>
+      <NeumorphicSurface inset style={styles.notice}>
+        <Animated.Text style={[styles.noticeTitle, { color: theme.warning }]}>Security status</Animated.Text>
+        <Animated.Text style={[styles.noticeBody, { color: theme.muted }]}>This UI is a prototype. Identity, encryption, and privacy controls are not active yet.</Animated.Text>
+      </NeumorphicSurface>
       <Animated.Text style={[styles.version, { color: theme.muted }]}>LATEO · 0.1.0</Animated.Text>
     </Screen>
   );
@@ -42,7 +45,7 @@ const styles = StyleSheet.create({
   themeCopy: { gap: 5 }, themeTitle: { fontSize: 14, fontWeight: '600' }, themeDetail: { fontSize: 11 },
   card: { borderRadius: 20, overflow: 'hidden' },
   divider: { borderBottomWidth: 1 },
-  notice: { marginTop: 22, borderRadius: 16, padding: 16, borderWidth: 1, gap: 7 },
+  notice: { marginTop: 22, borderRadius: 16, padding: 16, gap: 7 },
   noticeTitle: { fontSize: 12, fontWeight: '600' }, noticeBody: { fontSize: 11, lineHeight: 17 },
   version: { fontSize: 10, textAlign: 'center', marginTop: 'auto', paddingTop: 28 },
 });
