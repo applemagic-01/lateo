@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Animated, Pressable, StyleSheet, TextInput, View } from 'react-native';
-import { useTheme } from '../src/theme/ThemeProvider';
+import { useTheme } from '../../theme/ThemeProvider';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export function MessageComposer({value,onChangeText,onSend}:{value:string;onChangeText:(text:string)=>void;onSend:()=>void}){
  const { palette: theme } = useTheme();const scale=useRef(new Animated.Value(1)).current;
