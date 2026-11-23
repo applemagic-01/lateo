@@ -1,9 +1,9 @@
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useAnimatedTheme } from '../../theme/ThemeProvider';
+import { useTheme } from '../src/theme/ThemeProvider';
 
 export type Conversation = { initials: string; name: string; message: string; time: string; unread: number; color: string };
 export function ConversationItem({ item, onPress }: { item: Conversation; onPress?: () => void }) {
-  const theme = useAnimatedTheme();
+  const { palette: theme } = useTheme();
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.row, { borderBottomColor: theme.border }, pressed && styles.pressed]}>
       <View style={[styles.avatar, { backgroundColor: item.color }]}><Text style={styles.initial}>{item.initials}</Text></View>
