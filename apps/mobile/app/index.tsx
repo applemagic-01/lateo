@@ -1,50 +1,36 @@
 import { useState } from 'react';
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { AppButton } from '../src/components/ui/AppButton';
+import { BrandMark } from '../src/components/ui/BrandMark';
+import { ProgressIndicator } from '../src/components/onboarding/ProgressIndicator';
+import { PrivacyOrbit } from '../src/components/onboarding/PrivacyOrbit';
+import { colors, spacing } from '../src/theme/tokens';
 
-export default function HomeScreen() {
-  const [started, setStarted] = useState(false);
+const steps = [
+  { eyebrow: 'PRIVATE BY DESIGN', title: 'Remain unseen.\\nStay connected.', body: 'Conversations without the need to expose who you are.', action: 'Continue' },
+  { eyebrow: 'YOUR PRIVACY', title: 'No phone.\\nNo email.', body: 'LATEO is designed around anonymous identity—not your personal details, contacts, or public profile.', action: 'I understand' },
+  { eyebrow: 'A NEW IDENTITY', title: 'You decide\\nwhat to reveal.', body: 'Your anonymous identity is yours. This prototype does not create cryptographic keys yet.', action: 'Explore LATEO' },
+] as const;
+
+export default function OnboardingScreen() {
+  const [step, setStep] = useState(0);
+  const current = steps[step];
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-        <View style={styles.brandRow}>
-          <View style={styles.mark}>
-            <View style={styles.markInner} />
-          </View>
-          <Text style={styles.wordmark}>LATEO</Text>
-        </View>
-
+        <View style={styles.header}><BrandMark /><View style={styles.spacer} /><Text style={styles.stepLabel}>{step + 1} / 3</Text></View>
+        <ProgressIndicator total={steps.length} activeIndex={step} />
         <View style={styles.hero}>
-          <Text style={styles.eyebrow}>PRIVATE BY DESIGN</Text>
-          <Text style={styles.title}>Remain unseen.{ '\n' }Stay connected.</Text>
-          <Text style={styles.subtitle}>
-            Conversations without the need to expose who you are.
-          </Text>
-
-          <View style={styles.orbit}>
-            <View style={styles.orbitRing} />
-            <View style={styles.orbitCore}>
-              <View style={styles.orbitDot} />
-            </View>
-            <View style={[styles.smallNode, styles.nodeOne]} />
-            <View style={[styles.smallNode, styles.nodeTwo]} />
-          </View>
+          <Text style={styles.eyebrow}>{current.eyebrow}</Text>
+          <Text style={styles.title}>{current.title}</Text>
+          <Text style={styles.body}>{current.body}</Text>
+          <PrivacyOrbit />
         </View>
-
         <View style={styles.footer}>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => setStarted(true)}
-            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-          >
-            <Text style={styles.buttonText}>{started ? 'Prototype started' : 'Begin anonymously'}</Text>
-            <Text style={styles.arrow}>↗</Text>
-          </Pressable>
-          <Text style={styles.footnote}>
-            {started
-              ? 'Identity creation is not implemented yet.'
-              : 'No phone number. No email. No public profile.'}
-          </Text>
+          <AppButton label={current.action} rightLabel="↗" onPress={() => step === 2 ? router.replace('/home') : setStep(step + 1)} />
+          {step < 2 ? <Text onPress={() => router.replace('/home')} style={styles.skip}>Skip introduction</Text> : <Text style={styles.disclaimer}>Prototype only · Security features are not implemented</Text>}
         </View>
       </View>
     </SafeAreaView>
@@ -52,30 +38,16 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#09090D' },
-  container: { flex: 1, paddingHorizontal: 28, paddingTop: 24, paddingBottom: 18 },
-  brandRow: { flexDirection: 'row', alignItems: 'center', gap: 11 },
-  mark: {
-    width: 30, height: 30, borderRadius: 10, borderWidth: 1,
-    borderColor: '#77728F', alignItems: 'center', justifyContent: 'center',
-  },
-  markInner: { width: 9, height: 9, borderRadius: 5, backgroundColor: '#B8A9F4' },
-  wordmark: { color: '#F5F3FA', fontSize: 15, letterSpacing: 4, fontWeight: '600' },
-  hero: { flex: 1, justifyContent: 'center', alignItems: 'flex-start' },
+  safe: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, paddingHorizontal: 28, paddingTop: spacing.lg, paddingBottom: spacing.md },
+  header: { flexDirection: 'row', alignItems: 'center' },
+  spacer: { flex: 1 },
+  stepLabel: { color: colors.textMuted, fontSize: 12 },
+  hero: { flex: 1, justifyContent: 'center' },
   eyebrow: { color: '#9B91C7', letterSpacing: 3, fontSize: 10, fontWeight: '600', marginBottom: 18 },
-  title: { color: '#F6F4FB', fontSize: 43, lineHeight: 49, letterSpacing: -1.8, fontWeight: '500' },
-  subtitle: { color: '#9694A3', fontSize: 15, lineHeight: 23, marginTop: 18, maxWidth: 300 },
-  orbit: { alignSelf: 'center', width: 230, height: 230, marginTop: 42, alignItems: 'center', justifyContent: 'center' },
-  orbitRing: { position: 'absolute', width: 190, height: 190, borderRadius: 100, borderWidth: 1, borderColor: '#34313F' },
-  orbitCore: { width: 94, height: 94, borderRadius: 32, borderWidth: 1, borderColor: '#635B83', backgroundColor: '#17151F', alignItems: 'center', justifyContent: 'center' },
-  orbitDot: { width: 24, height: 24, borderRadius: 12, backgroundColor: '#B8A9F4', shadowColor: '#B8A9F4', shadowOpacity: 0.5, shadowRadius: 20 },
-  smallNode: { position: 'absolute', width: 9, height: 9, borderRadius: 5, backgroundColor: '#77718F' },
-  nodeOne: { top: 26, right: 38 },
-  nodeTwo: { bottom: 30, left: 35 },
+  title: { color: colors.text, fontSize: 43, lineHeight: 49, letterSpacing: -1.8, fontWeight: '500' },
+  body: { color: colors.textMuted, fontSize: 15, lineHeight: 23, marginTop: 18, maxWidth: 310 },
   footer: { gap: 14 },
-  button: { height: 58, borderRadius: 18, backgroundColor: '#E9E4F8', paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  buttonPressed: { opacity: 0.78, transform: [{ scale: 0.99 }] },
-  buttonText: { color: '#17141F', fontSize: 15, fontWeight: '600' },
-  arrow: { color: '#17141F', fontSize: 20 },
-  footnote: { color: '#777582', textAlign: 'center', fontSize: 11 },
+  skip: { color: colors.textMuted, fontSize: 12, textAlign: 'center', paddingVertical: 10 },
+  disclaimer: { color: colors.textMuted, fontSize: 10, textAlign: 'center' },
 });
