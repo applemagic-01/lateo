@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, ViewStyle } from 'react-native';
-import { useTheme } from '../src/theme/ThemeProvider';
+import { useTheme } from '../../theme/ThemeProvider';
 import { radius } from '../../theme/tokens';
 
 type Props = { label: string; onPress: () => void; variant?: 'primary' | 'secondary' | 'ghost'; rightLabel?: string; style?: ViewStyle };
