@@ -1,9 +1,11 @@
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { SettingsRow } from '../src/components/settings/SettingsRow';
-import { colors, radius } from '../src/theme/tokens';
+import { ThemeToggle } from '../src/components/ui/ThemeToggle';
+import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
+import { useAnimatedTheme, useTheme } from '../src/theme/ThemeProvider';
 
 const rows = [
   { title: 'Anonymous identity', detail: 'Quiet Orbit' },
@@ -13,26 +15,34 @@ const rows = [
 ];
 
 export default function SettingsScreen() {
+  const theme = useAnimatedTheme();
+  const { palette, mode } = useTheme();
   return (
     <Screen>
-      <Pressable onPress={() => router.back()} style={styles.back}><Text style={styles.backText}>‹  Back</Text></Pressable>
+      <Pressable onPress={() => router.back()} style={styles.back}><Animated.Text style={[styles.backText, { color: theme.muted }]}>‹  Back</Animated.Text></Pressable>
       <SectionLabel>YOUR CONTROL</SectionLabel>
-      <Text style={styles.title}>Settings</Text>
-      <View style={styles.card}>{rows.map((row, index) => <View key={row.title} style={index !== rows.length - 1 && styles.divider}><SettingsRow title={row.title} detail={row.detail} /></View>)}</View>
-      <View style={styles.notice}><Text style={styles.noticeTitle}>Security status</Text><Text style={styles.noticeBody}>This UI is a prototype. Identity, encryption, and privacy controls are not active yet.</Text></View>
-      <Text style={styles.version}>LATEO · 0.1.0</Text>
+      <Animated.Text style={[styles.title, { color: theme.text }]}>Settings</Animated.Text>
+      <NeumorphicSurface style={styles.themeCard} raised>
+        <View style={styles.themeCopy}><Animated.Text style={[styles.themeTitle, { color: theme.text }]}>Appearance</Animated.Text><Animated.Text style={[styles.themeDetail, { color: theme.muted }]}>{mode === 'dark' ? 'Dark mode' : 'Light mode'}</Animated.Text></View>
+        <ThemeToggle />
+      </NeumorphicSurface>
+      <NeumorphicSurface style={styles.card}>
+        {rows.map((row, index) => <View key={row.title} style={index !== rows.length - 1 && [styles.divider, { borderBottomColor: palette.border }]}><SettingsRow title={row.title} detail={row.detail} /></View>)}
+      </NeumorphicSurface>
+      <View style={[styles.notice, { backgroundColor: palette.surfaceAlt, borderColor: palette.border }]}><Animated.Text style={[styles.noticeTitle, { color: theme.warning }]}>Security status</Animated.Text><Animated.Text style={[styles.noticeBody, { color: theme.muted }]}>This UI is a prototype. Identity, encryption, and privacy controls are not active yet.</Animated.Text></View>
+      <Animated.Text style={[styles.version, { color: theme.muted }]}>LATEO · 0.1.0</Animated.Text>
     </Screen>
   );
 }
-
 const styles = StyleSheet.create({
   back: { alignSelf: 'flex-start', paddingVertical: 10, marginBottom: 24 },
-  backText: { color: colors.textMuted, fontSize: 14 },
-  title: { color: colors.text, fontSize: 30, letterSpacing: -1, fontWeight: '500', marginTop: 7, marginBottom: 24 },
-  card: { borderRadius: radius.lg, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
-  divider: { borderBottomWidth: 1, borderBottomColor: '#282530' },
-  notice: { marginTop: 22, borderRadius: radius.md, padding: 16, backgroundColor: '#201C24', borderWidth: 1, borderColor: '#45333B', gap: 7 },
-  noticeTitle: { color: '#E7B6BE', fontSize: 12, fontWeight: '600' },
-  noticeBody: { color: colors.textMuted, fontSize: 11, lineHeight: 17 },
-  version: { color: '#5E5B67', fontSize: 10, textAlign: 'center', marginTop: 'auto', paddingTop: 28 },
+  backText: { fontSize: 14 },
+  title: { fontSize: 30, letterSpacing: -1, fontWeight: '500', marginTop: 7, marginBottom: 20 },
+  themeCard: { borderRadius: 20, padding: 16, marginBottom: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  themeCopy: { gap: 5 }, themeTitle: { fontSize: 14, fontWeight: '600' }, themeDetail: { fontSize: 11 },
+  card: { borderRadius: 20, overflow: 'hidden' },
+  divider: { borderBottomWidth: 1 },
+  notice: { marginTop: 22, borderRadius: 16, padding: 16, borderWidth: 1, gap: 7 },
+  noticeTitle: { fontSize: 12, fontWeight: '600' }, noticeBody: { fontSize: 11, lineHeight: 17 },
+  version: { fontSize: 10, textAlign: 'center', marginTop: 'auto', paddingTop: 28 },
 });
