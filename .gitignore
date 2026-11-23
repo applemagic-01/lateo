@@ -1,0 +1,9 @@
+node_modules
+.pnpm-store
+.expo
+.env
+.env.*
+!.env.example
+target
+.DS_Store
+coverage

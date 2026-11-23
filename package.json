@@ -1,0 +1,13 @@
+{
+  "name": "lateo",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "mobile": "pnpm --dir apps/mobile start",
+    "mobile:tunnel": "pnpm --dir apps/mobile start --tunnel",
+    "mobile:ios": "pnpm --dir apps/mobile ios",
+    "lint": "pnpm --dir apps/mobile lint",
+    "typecheck": "pnpm --dir apps/mobile typecheck"
+  }
+}

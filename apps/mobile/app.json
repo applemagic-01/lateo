@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "LATEO",
+    "slug": "lateo",
+    "scheme": "lateo",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "app.lateo.mobile"
+    },
+    "android": {
+      "package": "app.lateo.mobile"
+    }
+  }
+}

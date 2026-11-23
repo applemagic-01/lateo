@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: lateo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lateo
+      POSTGRES_PASSWORD: lateo_local_dev
+      POSTGRES_DB: lateo
+    ports:
+      - "5432:5432"
+    volumes:
+      - lateo_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lateo -d lateo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: lateo-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - lateo_redis_data:/data
+
+volumes:
+  lateo_postgres_data:
+  lateo_redis_data:
