@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import { Animated, Pressable, StyleSheet, TextInput, View } from 'react-native';
-import { useAnimatedTheme } from '../../theme/ThemeProvider';
+import { useTheme } from '../src/theme/ThemeProvider';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export function MessageComposer({value,onChangeText,onSend}:{value:string;onChangeText:(text:string)=>void;onSend:()=>void}){
- const theme=useAnimatedTheme();const scale=useRef(new Animated.Value(1)).current;
+ const { palette: theme } = useTheme();const scale=useRef(new Animated.Value(1)).current;
  const press=(to:number)=>Animated.spring(scale,{toValue:to,useNativeDriver:true,speed:22,bounciness:4}).start();
  return <View style={styles.wrap}><Animated.View style={[styles.shell,{backgroundColor:theme.surface,borderColor:theme.border,shadowColor:theme.shadow}]}><TextInput value={value} onChangeText={onChangeText} placeholder="Write a message…" placeholderTextColor="#8B8795" multiline maxLength={4000} style={[styles.input,{color:theme.text}]} returnKeyType="send" onSubmitEditing={onSend}/><Animated.View style={{transform:[{scale}]}}><AnimatedPressable onPress={onSend} onPressIn={()=>press(.88)} onPressOut={()=>press(1)} accessibilityRole="button" accessibilityLabel="Send message" style={[styles.send,{backgroundColor:theme.accentSoft}]}> <Animated.Text style={[styles.sendIcon,{color:theme.accentText}]}>↑</Animated.Text></AnimatedPressable></Animated.View></Animated.View></View>;
 }
