@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { IdentityCard } from '../src/components/conversations/IdentityCard';
@@ -21,7 +22,7 @@ export default function HomeScreen() {
     <Screen>
       <View style={styles.header}>
         <View><SectionLabel>YOUR SPACE</SectionLabel><Animated.Text style={[styles.title, { color: theme.text }]}>Conversations</Animated.Text></View>
-        <View style={styles.actions}><ThemeToggle /><Pressable style={[styles.settings, { backgroundColor: theme.surface, borderColor: theme.border }]} onPress={() => router.push('/settings')}><Animated.Text style={[styles.settingsText, { color: theme.accent }]}>◈</Animated.Text></Pressable></View>
+        <View style={styles.actions}><ThemeToggle /><AnimatedPressable style={[styles.settings, { backgroundColor: theme.surface, borderColor: theme.border }]} onPress={() => router.push('/settings')}><Animated.Text style={[styles.settingsText, { color: theme.accent }]}>◈</Animated.Text></AnimatedPressable></View>
       </View>
       <IdentityCard identityName="Quiet Orbit" />
       <View style={styles.section}><Animated.Text style={[styles.sectionTitle, { color: theme.text }]}>Recent</Animated.Text><Animated.Text style={[styles.count, { color: theme.muted }]}>03</Animated.Text></View>
