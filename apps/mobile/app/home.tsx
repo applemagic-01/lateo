@@ -7,7 +7,7 @@ import { ConversationItem, Conversation } from '../src/components/conversations/
 import { AppButton } from '../src/components/ui/AppButton';
 import { ThemeToggle } from '../src/components/ui/ThemeToggle';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
-import { useAnimatedTheme } from '../src/theme/ThemeProvider';
+import { useTheme } from '../src/theme/ThemeProvider';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const conversations: Conversation[] = [
@@ -17,7 +17,7 @@ const conversations: Conversation[] = [
 ];
 
 export default function HomeScreen() {
-  const theme = useAnimatedTheme();
+  const { palette: theme } = useTheme();
   return (
     <Screen>
       <View style={styles.header}>
