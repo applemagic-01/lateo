@@ -5,8 +5,9 @@ import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { AppButton } from '../src/components/ui/AppButton';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
-import { useAnimatedTheme, useTheme } from '../src/theme/ThemeProvider';
+import { useAnimatedTheme } from '../src/theme/ThemeProvider';
 import { radius } from '../src/theme/tokens';
+import { ThemeToggle } from '../src/components/ui/ThemeToggle';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Expiry = '1 hour' | '24 hours' | '7 days';
@@ -28,7 +29,7 @@ export default function NewConversationScreen() {
     <Screen>
       <View style={styles.header}>
         <AnimatedPressable onPress={() => router.back()} style={[styles.back, { backgroundColor: theme.surface, borderColor: theme.border }]}><Animated.Text style={[styles.backText, { color: theme.text }]}>‹</Animated.Text></AnimatedPressable>
-        <View style={styles.headerCopy}><SectionLabel>PRIVATE CONNECTION</SectionLabel><Animated.Text style={[styles.title, { color: theme.text }]}>New conversation</Animated.Text></View>
+        <View style={styles.headerCopy}><SectionLabel>PRIVATE CONNECTION</SectionLabel><Animated.Text style={[styles.title, { color: theme.text }]}>New conversation</Animated.Text></View><ThemeToggle />
       </View>
       {!created ? <>
         <View style={styles.intro}>
