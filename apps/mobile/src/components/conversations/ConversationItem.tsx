@@ -23,9 +23,13 @@ export function ConversationItem({
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.row,
+        { borderBottomColor: palette.border },
+        pressed && styles.pressed,
+      ]}
     >
-      <NeumorphicSurface inset style={styles.avatar}>
+      <NeumorphicSurface raised style={[styles.avatar, { backgroundColor: item.color }]}>
         <Text style={[styles.initial, { color: palette.text }]}>{item.initials}</Text>
       </NeumorphicSurface>
       <View style={styles.content}>
@@ -58,6 +62,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 14,
     paddingHorizontal: 4,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     gap: 13,
   },
   avatar: {
