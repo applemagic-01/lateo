@@ -1,9 +1,9 @@
 import { PropsWithChildren } from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 
 type Props = PropsWithChildren<{
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   inset?: boolean;
   raised?: boolean;
 }>;
