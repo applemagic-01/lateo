@@ -5,7 +5,7 @@ import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { SettingsRow } from '../src/components/settings/SettingsRow';
 import { ThemeToggle } from '../src/components/ui/ThemeToggle';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
-import { useAnimatedTheme, useTheme } from '../src/theme/ThemeProvider';
+import { useTheme } from '../src/theme/ThemeProvider';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const rows = [
@@ -16,7 +16,7 @@ const rows = [
 ];
 
 export default function SettingsScreen() {
-  const theme = useAnimatedTheme();
+  const { palette: theme } = useTheme();
   const { palette, mode } = useTheme();
   return (
     <Screen>
@@ -30,7 +30,7 @@ export default function SettingsScreen() {
       <NeumorphicSurface style={styles.card}>
         {rows.map((row, index) => <View key={row.title} style={index !== rows.length - 1 && [styles.divider, { borderBottomColor: palette.border }]}><SettingsRow title={row.title} detail={row.detail} /></View>)}
       </NeumorphicSurface>
-      <View style={[styles.notice, { backgroundColor: palette.surfaceAlt, borderColor: palette.border }]}><Animated.Text style={[styles.noticeTitle, { color: theme.warning }]}>Security status</Animated.Text><Animated.Text style={[styles.noticeBody, { color: theme.muted }]}>This UI is a prototype. Identity, encryption, and privacy controls are not active yet.</Animated.Text></View>
+      <View style={[styles.notice, { backgroundColor: palette.surfaceAlt, borderColor: palette.border }]}><Animated.Text style={[styles.noticeTitle, { color: palette.warning }]}>Security status</Animated.Text><Animated.Text style={[styles.noticeBody, { color: theme.muted }]}>This UI is a prototype. Identity, encryption, and privacy controls are not active yet.</Animated.Text></View>
       <Animated.Text style={[styles.version, { color: theme.muted }]}>LATEO · 0.1.0</Animated.Text>
     </Screen>
   );
