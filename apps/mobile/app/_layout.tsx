@@ -1,12 +1,14 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { colors } from '../src/theme/tokens';
+import { ThemeProvider, useTheme } from '../src/theme/ThemeProvider';
 
+function AppStack() {
+  const { mode, palette } = useTheme();
+  return <>
+    <StatusBar style={mode === 'dark' ? 'light' : 'dark'} animated />
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.background }, animation: 'fade' }} />
+  </>;
+}
 export default function RootLayout() {
-  return (
-    <>
-      <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background }, animation: 'fade' }} />
-    </>
-  );
+  return <ThemeProvider><AppStack /></ThemeProvider>;
 }
