@@ -4,41 +4,41 @@ import { Animated, Easing } from 'react-native';
 export type ThemeMode = 'dark' | 'light';
 
 const dark = {
-  background: '#252B35',
-  surface: '#252B35',
-  raised: '#252B35',
-  inset: '#202630',
-  text: '#F1F3F6',
-  muted: '#9AA4B1',
-  accent: '#F05A60',
-  accentSoft: '#F05A60',
+  background: '#202127',
+  surface: '#25262E',
+  raised: '#25262E',
+  inset: '#1C1D24',
+  text: '#F1F1F3',
+  muted: '#A0A1AA',
+  accent: '#D94B55',
+  accentSoft: '#D94B55',
   accentText: '#FFFFFF',
-  border: '#303946',
-  shadow: '#111720',
-  highlight: '#46515F',
-  success: '#8EC7A2',
-  warning: '#E4B66F',
-  danger: '#E8787E',
-  surfaceAlt: '#29313C',
+  border: '#30323B',
+  shadow: '#101116',
+  highlight: '#383A45',
+  success: '#86B99A',
+  warning: '#D7B77A',
+  danger: '#D96A70',
+  surfaceAlt: '#24252D',
 };
 
 const light = {
-  background: '#E7EBF0',
-  surface: '#E7EBF0',
-  raised: '#E7EBF0',
-  inset: '#DDE3EA',
-  text: '#29313C',
-  muted: '#697583',
-  accent: '#CE4851',
-  accentSoft: '#D94E57',
+  background: '#E9E8E6',
+  surface: '#E9E8E6',
+  raised: '#E9E8E6',
+  inset: '#DEDDDA',
+  text: '#292A30',
+  muted: '#74757D',
+  accent: '#C83F49',
+  accentSoft: '#C83F49',
   accentText: '#FFFFFF',
-  border: '#D4DBE4',
-  shadow: '#B7C0CC',
+  border: '#D1D0CE',
+  shadow: '#B8B7B4',
   highlight: '#FFFFFF',
   success: '#397A5B',
   warning: '#986B2B',
   danger: '#B45561',
-  surfaceAlt: '#E1E6ED',
+  surfaceAlt: '#E1E0DD',
 };
 
 type Palette = typeof dark;
@@ -86,7 +86,6 @@ export function useTheme() {
   return value;
 }
 
-// Kept as a compatibility alias while components migrate to the static palette.
 export function useAnimatedTheme() {
   const { palette } = useTheme();
   return palette;
