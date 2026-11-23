@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Share, Animated, StyleSheet, Text, View, Pressable } from 'react-native';
+import { Share, Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { AppButton } from '../src/components/ui/AppButton';
@@ -19,7 +20,7 @@ export default function NewConversationScreen() {
   const [inviteCode] = useState(() => Math.random().toString(36).slice(2, 10).toUpperCase());
   const inviteUrl = `https://lateo.example/invite/${inviteCode}`;
   const theme = useAnimatedTheme();
-  const { palette } = useTheme();
+  
 
   const shareInvite = async () => Share.share({ message: `Join me on LATEO. This prototype invitation is not secure or functional yet: ${inviteUrl}`, url: inviteUrl });
 
@@ -39,17 +40,17 @@ export default function NewConversationScreen() {
           <Animated.Text style={[styles.sectionTitle, { color: theme.text }]}>Invitation expires</Animated.Text>
           <View style={styles.options}>{expiryOptions.map(option => {
             const selected = expiry === option.label;
-            return <Pressable key={option.label} onPress={() => setExpiry(option.label)} style={[styles.option, { backgroundColor: theme.surface, borderColor: theme.border }, selected && { backgroundColor: theme.surfaceAlt, borderColor: theme.accent }]}>
+            return <AnimatedPressable key={option.label} onPress={() => setExpiry(option.label)} style={[styles.option, { backgroundColor: theme.surface, borderColor: theme.border }, selected && { backgroundColor: theme.surfaceAlt, borderColor: theme.accent }]}>
               <View style={styles.optionTop}><Animated.Text style={[styles.optionLabel, { color: selected ? theme.accent : theme.text }]}>{option.label}</Animated.Text>{selected ? <Animated.Text style={[styles.check, { color: theme.accent }]}>✓</Animated.Text> : null}</View>
               <Animated.Text style={[styles.optionDetail, { color: theme.muted }]}>{option.detail}</Animated.Text>
-            </Pressable>;
+            </AnimatedPressable>;
           })}</View>
         </View>
         <View style={styles.section}>
           <Animated.Text style={[styles.sectionTitle, { color: theme.text }]}>Your identity</Animated.Text>
           <View style={styles.identityOptions}>{(['Persistent', 'Disposable'] as const).map(mode => {
             const selected = identity === mode;
-            return <Pressable key={mode} onPress={() => setIdentity(mode)} style={[styles.identityOption, { backgroundColor: theme.surface, borderColor: theme.border }, selected && { backgroundColor: theme.surfaceAlt, borderColor: theme.accent }]}>
+            return <AnimatedPressable key={mode} onPress={() => setIdentity(mode)} style={[styles.identityOption, { backgroundColor: theme.surface, borderColor: theme.border }, selected && { backgroundColor: theme.surfaceAlt, borderColor: theme.accent }]}>
               <Animated.Text style={[styles.identityIcon, { color: theme.accent }]}>{mode === 'Persistent' ? '◈' : '◇'}</Animated.Text>
               <Animated.Text style={[styles.identityLabel, { color: selected ? theme.accent : theme.text }]}>{mode}</Animated.Text>
               <Animated.Text style={[styles.identityDetail, { color: theme.muted }]}>{mode === 'Persistent' ? 'Keep the same anonymous identity' : 'Use a fresh identity for this chat'}</Animated.Text>
