@@ -111,13 +111,13 @@ export default function ConversationScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingHorizontal: 18,
+    paddingTop: 8,
     paddingBottom: 6,
   },
   keyboard: { flex: 1 },
-  top: { paddingHorizontal: 4 },
-  disclaimer: { paddingHorizontal: 4, paddingBottom: 8 },
+  top: { paddingHorizontal: 0 },
+  disclaimer: { paddingHorizontal: 0, paddingBottom: 8 },
   notice: {
     paddingVertical: 9,
     paddingHorizontal: 12,
@@ -130,8 +130,8 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingVertical: 12,
-    paddingHorizontal: 2,
+    paddingHorizontal: 0,
     flexGrow: 1,
   },
-  composer: { paddingHorizontal: 2 },
+  composer: { paddingHorizontal: 0 },
 });
