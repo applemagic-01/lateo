@@ -26,7 +26,7 @@ export default function HomeScreen() {
         {conversations.map((item) => <ConversationItem key={item.name} item={item} />)}
         <View style={styles.emptyHint}><Text style={styles.emptyTitle}>Quiet by default</Text><Text style={styles.emptyBody}>New conversations appear here. Start one with an invitation link.</Text></View>
       </ScrollView>
-      <AppButton label="New conversation" rightLabel="＋" onPress={() => {}} />
+      <AppButton label="New conversation" rightLabel="＋" onPress={() => router.push('/new-conversation')} />
       <View style={styles.bottomNote}><View style={styles.lockDot} /><Text style={styles.bottomText}>Prototype · Messages are not encrypted yet</Text></View>
     </Screen>
   );
