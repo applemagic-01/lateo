@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppButton } from '../src/components/ui/AppButton';
 import { BrandMark } from '../src/components/ui/BrandMark';
 import { ProgressIndicator } from '../src/components/onboarding/ProgressIndicator';
@@ -18,7 +19,7 @@ export default function OnboardingScreen() {
   const current = steps[step];
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['top', 'right', 'bottom', 'left']}>
       <View style={styles.container}>
         <View style={styles.header}><BrandMark /><View style={styles.spacer} /><Text style={styles.stepLabel}>{step + 1} / 3</Text></View>
         <ProgressIndicator total={steps.length} activeIndex={step} />
