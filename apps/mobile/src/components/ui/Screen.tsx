@@ -1,20 +1,17 @@
 import { PropsWithChildren } from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { Animated, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors } from '../../theme/tokens';
+import { useAnimatedTheme } from '../../theme/ThemeProvider';
 
 type Props = PropsWithChildren<{ contentStyle?: ViewStyle; padded?: boolean }>;
-
 export function Screen({ children, contentStyle, padded = true }: Props) {
+  const theme = useAnimatedTheme();
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'right', 'bottom', 'left']}>
-      <View style={[styles.content, padded && styles.padded, contentStyle]}>{children}</View>
-    </SafeAreaView>
+    <Animated.View style={[styles.safe, { backgroundColor: theme.background }]}>
+      <SafeAreaView style={styles.safe} edges={['top', 'right', 'bottom', 'left']}>
+        <Animated.View style={[styles.content, padded && styles.padded, { backgroundColor: theme.background }, contentStyle]}>{children}</Animated.View>
+      </SafeAreaView>
+    </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  content: { flex: 1 },
-  padded: { paddingHorizontal: 24, paddingTop: 20, paddingBottom: 14 },
-});
+const styles = StyleSheet.create({ safe: { flex: 1 }, content: { flex: 1 }, padded: { paddingHorizontal: 24, paddingTop: 20, paddingBottom: 14 } });
