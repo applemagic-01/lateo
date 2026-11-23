@@ -1,6 +1,5 @@
 import { router } from 'expo-router';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 import { Screen } from '../src/components/ui/Screen';
 import { SectionLabel } from '../src/components/ui/SectionLabel';
 import { IdentityCard } from '../src/components/conversations/IdentityCard';
@@ -9,6 +8,7 @@ import { AppButton } from '../src/components/ui/AppButton';
 import { ThemeToggle } from '../src/components/ui/ThemeToggle';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
 import { useAnimatedTheme } from '../src/theme/ThemeProvider';
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const conversations: Conversation[] = [
   { initials: 'M', name: 'Mira', message: 'That stays between us.', time: '2m', unread: 2, color: '#8E83C5' },
