@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  name: { fontSize: 14, fontWeight: '650' },
+  name: { fontSize: 14, fontWeight: '600' },
   time: { fontSize: 10 },
   message: { fontSize: 12 },
   unread: {
