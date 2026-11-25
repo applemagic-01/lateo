@@ -1,16 +1,21 @@
 import { Animated, Pressable, StyleSheet, Text } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 
+// Native reimplementation inspired by Praashoo7's Uiverse switch (MIT).
 export function ThemeToggle() {
   const { mode, toggle, palette, progress } = useTheme();
 
   const position = progress.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 38],
+    outputRange: [0, 30],
+  });
+  const trackColor = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#171717', '#CCCCCC'],
   });
   const thumbRotation = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['-24deg', '24deg'],
+    inputRange: [0, 0.5, 1],
+    outputRange: ['-18deg', '0deg', '18deg'],
   });
   const moonOpacity = progress.interpolate({
     inputRange: [0, 0.45, 1],
@@ -22,7 +27,7 @@ export function ThemeToggle() {
   });
   const thumbScale = progress.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: [1, 0.94, 1],
+    outputRange: [1, 0.92, 1],
   });
 
   return (
@@ -31,121 +36,94 @@ export function ThemeToggle() {
       accessibilityLabel="Toggle light and dark appearance"
       accessibilityState={{ checked: mode === 'light' }}
       onPress={toggle}
-      hitSlop={7}
-      style={[
-        styles.track,
-        {
-          backgroundColor: palette.inset,
-          borderTopColor: palette.border,
-          borderLeftColor: palette.border,
-          borderRightColor: palette.highlight,
-          borderBottomColor: palette.highlight,
-          shadowColor: palette.shadow,
-        },
-      ]}
+      hitSlop={8}
+      style={styles.touchTarget}
     >
-      <Text
-        style={[
-          styles.trackIcon,
-          styles.moonTrack,
-          { color: mode === 'dark' ? palette.accent : palette.muted },
-        ]}
-      >
-        ☾
-      </Text>
-      <Text
-        style={[
-          styles.trackIcon,
-          styles.sunTrack,
-          { color: mode === 'light' ? palette.accent : palette.muted },
-        ]}
-      >
-        ☀
-      </Text>
-
       <Animated.View
         style={[
-          styles.thumb,
+          styles.track,
           {
-            backgroundColor: palette.surface,
-            borderTopColor: palette.highlight,
-            borderLeftColor: palette.highlight,
-            borderRightColor: palette.border,
-            borderBottomColor: palette.border,
-            shadowColor: palette.shadow,
-            transform: [
-              { translateX: position },
-              { rotate: thumbRotation },
-              { scale: thumbScale },
-            ],
+            backgroundColor: trackColor,
+            borderColor: mode === 'dark' ? '#35363D' : '#C4C4C4',
+            shadowColor: mode === 'dark' ? '#0D0E12' : '#B7B7B7',
           },
         ]}
       >
-        <Animated.Text
+        <Animated.View
           style={[
-            styles.thumbIcon,
-            styles.moon,
-            { color: palette.accent, opacity: moonOpacity },
+            styles.thumb,
+            {
+              backgroundColor: '#E8E8E8',
+              borderColor: mode === 'dark' ? '#FFFFFF' : '#F7F7F7',
+              shadowColor: mode === 'dark' ? '#090A0E' : '#A6A6A6',
+              transform: [
+                { translateX: position },
+                { rotate: thumbRotation },
+                { scale: thumbScale },
+              ],
+            },
           ]}
         >
-          ☾
-        </Animated.Text>
-        <Animated.Text
-          style={[
-            styles.thumbIcon,
-            styles.sun,
-            { color: palette.accent, opacity: sunOpacity },
-          ]}
-        >
-          ☀
-        </Animated.Text>
+          <Animated.Text
+            style={[
+              styles.thumbIcon,
+              { color: '#292A30', opacity: moonOpacity },
+            ]}
+          >
+            ☾
+          </Animated.Text>
+          <Animated.Text
+            style={[
+              styles.thumbIcon,
+              { color: '#9A6A16', opacity: sunOpacity },
+            ]}
+          >
+            ☀
+          </Animated.Text>
+        </Animated.View>
       </Animated.View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  touchTarget: {
+    minWidth: 68,
+    minHeight: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   track: {
-    width: 76,
-    height: 38,
+    width: 64,
+    height: 36,
     borderRadius: 20,
     borderWidth: 1,
     justifyContent: 'center',
     padding: 3,
     shadowOffset: { width: -2, height: -2 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.24,
     shadowRadius: 4,
     elevation: 1,
   },
-  trackIcon: {
-    position: 'absolute',
-    top: 9,
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  moonTrack: { left: 11 },
-  sunTrack: { right: 10 },
   thumb: {
     position: 'absolute',
     left: 3,
     top: 3,
-    width: 30,
-    height: 30,
+    width: 28,
+    height: 28,
     borderRadius: 16,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowOffset: { width: 3, height: 4 },
+    shadowOffset: { width: 2, height: 3 },
     shadowOpacity: 0.32,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowRadius: 5,
+    elevation: 3,
   },
   thumbIcon: {
     position: 'absolute',
-    fontSize: 15,
-    lineHeight: 19,
+    fontSize: 14,
+    lineHeight: 18,
     textAlign: 'center',
   },
-  moon: { top: 5, left: 7 },
-  sun: { top: 5, left: 6 },
 });
