@@ -8,10 +8,12 @@ export function ConversationHeader({
   name,
   initials,
   color,
+  onAvatarPress,
 }: {
   name: string;
   initials: string;
   color: string;
+  onAvatarPress?: () => void;
 }) {
   const { palette } = useTheme();
 
@@ -25,11 +27,21 @@ export function ConversationHeader({
         </NeumorphicSurface>
       </Pressable>
 
-      <NeumorphicSurface raised style={styles.avatar}>
-        <View style={[styles.avatarInner, { backgroundColor: color }]}>
-          <Animated.Text style={styles.initials}>{initials}</Animated.Text>
-        </View>
-      </NeumorphicSurface>
+      <Pressable
+        onPress={onAvatarPress}
+        accessibilityRole="button"
+        accessibilityLabel={`Conversation options for ${name}`}
+        accessibilityHint="Opens mute, block and report options"
+        hitSlop={6}
+      >
+        <NeumorphicSurface raised style={styles.avatar}>
+          <View style={[styles.avatarInner, { backgroundColor: palette.surfaceAlt, borderColor: palette.highlight }]}>
+            <Animated.Text style={[styles.initials, { color: palette.text }]}>
+              {initials}
+            </Animated.Text>
+          </View>
+        </NeumorphicSurface>
+      </Pressable>
 
       <View style={styles.info}>
         <Animated.Text style={[styles.name, { color: palette.text }]}>
@@ -60,18 +72,19 @@ const styles = StyleSheet.create({
   },
   backText: { fontSize: 27, marginTop: -3 },
   avatar: {
-    width: 43,
-    height: 43,
-    borderRadius: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 17,
     padding: 3,
   },
   avatarInner: {
     flex: 1,
-    borderRadius: 13,
+    borderRadius: 14,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  initials: { color: '#FFFFFF', fontSize: 14, fontWeight: '700' },
+  initials: { fontSize: 14, fontWeight: '700' },
   info: { flex: 1, gap: 3 },
   name: { fontSize: 14, fontWeight: '700' },
   status: { fontSize: 10 },
