@@ -320,7 +320,7 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
 
       setConversations((current) =>
         current.map((conversation) =>
-          conversation.id === conversationId && !conversation.isBlocked
+          conversation.id === conversationId
             ? {
                 ...conversation,
                 reportReason: normalizedReason,
@@ -349,7 +349,7 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
     setConversations((current) =>
       current
         .map((conversation) =>
-          conversation.id === conversationId
+          conversation.id === conversationId && !conversation.isBlocked
             ? {
                 ...conversation,
                 messages: [...conversation.messages, message],
