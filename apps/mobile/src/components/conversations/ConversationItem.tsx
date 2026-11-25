@@ -3,6 +3,7 @@ import { useTheme } from '../../theme/ThemeProvider';
 import { NeumorphicSurface } from '../ui/NeumorphicSurface';
 
 export type Conversation = {
+  id: string;
   initials: string;
   name: string;
   message: string;
