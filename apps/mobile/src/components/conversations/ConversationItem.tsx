@@ -1,5 +1,6 @@
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
+import { NeumorphicSurface } from '../ui/NeumorphicSurface';
 
 export type Conversation = {
   id: string;
@@ -30,11 +31,11 @@ export function ConversationItem({
         accessibilityLabel={`Open conversation with ${item.name}`}
         style={({ pressed }) => [styles.main, pressed && styles.pressed]}
       >
-        <View style={[styles.avatar, { backgroundColor: item.color, borderColor: palette.border }]}>
+        <NeumorphicSurface raised style={styles.avatar}>
           <Text style={[styles.initial, { color: palette.text }]}>
             {item.initials}
           </Text>
-        </View>
+        </NeumorphicSurface>
 
         <View style={styles.content}>
           <View style={styles.nameRow}>
@@ -97,10 +98,9 @@ const styles = StyleSheet.create({
     gap: 13,
   },
   avatar: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    borderWidth: 1,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     alignItems: 'center',
     justifyContent: 'center',
   },
