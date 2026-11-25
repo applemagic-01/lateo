@@ -48,7 +48,7 @@ export default function HomeScreen() {
   const [query, setQuery] = useState('');
 
   const rows = useMemo<Conversation[]>(() => {
-    return conversations.map((conversation) => {
+    return conversations.map((conversation): Conversation => {
       const latest = conversation.messages[conversation.messages.length - 1];
 
       return {
@@ -59,7 +59,7 @@ export default function HomeScreen() {
         unread: conversation.unread,
         color: conversation.color,
         id: conversation.id,
-      } as Conversation & { id: string };
+      };
     });
   }, [conversations]);
 
@@ -150,12 +150,12 @@ export default function HomeScreen() {
           ) : filteredConversations.length > 0 ? (
             filteredConversations.map((item) => (
               <ConversationItem
-                key={(item as Conversation & { id: string }).id}
+                key={item.id}
                 item={item}
                 onPress={() =>
                   router.push({
                     pathname: '/conversation',
-                    params: { id: (item as Conversation & { id: string }).id },
+                    params: { id: item.id },
                   })
                 }
               />
