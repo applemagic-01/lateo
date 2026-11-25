@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
+  ActivityIndicator,
   Animated,
   FlatList,
   KeyboardAvoidingView,
@@ -11,64 +12,82 @@ import {
 import { Screen } from '../src/components/ui/Screen';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
 import { ConversationHeader } from '../src/components/messaging/ConversationHeader';
-import {
-  MessageBubble,
-  ChatMessage,
-} from '../src/components/messaging/MessageBubble';
+import { MessageBubble } from '../src/components/messaging/MessageBubble';
 import { MessageComposer } from '../src/components/messaging/MessageComposer';
+import { AppButton } from '../src/components/ui/AppButton';
 import { useTheme } from '../src/theme/ThemeProvider';
-
-const initial: ChatMessage[] = [
-  { id: '1', text: 'Hey, good to hear from you.', time: '9:41', mine: false },
-  {
-    id: '2',
-    text: 'I was hoping we could talk.',
-    time: '9:42',
-    mine: true,
-    status: 'delivered',
-  },
-  { id: '3', text: 'Of course. What’s on your mind?', time: '9:42', mine: false },
-  {
-    id: '4',
-    text: 'Just wanted to check in. No pressure.',
-    time: '9:43',
-    mine: true,
-    status: 'sent',
-  },
-];
+import {
+  LocalChatMessage,
+  useLocalData,
+} from '../src/state/LocalDataProvider';
 
 export default function ConversationScreen() {
-  const params = useLocalSearchParams<{
-    name?: string;
-    initials?: string;
-    color?: string;
-  }>();
-  const name = params.name || 'New connection';
-  const initials = params.initials || 'L';
-  const color = params.color || '#F05A60';
-  const [messages, setMessages] = useState(initial);
-  const [draft, setDraft] = useState('');
+  const { id } = useLocalSearchParams<{ id?: string }>();
+  const conversationId = Array.isArray(id) ? id[0] : id;
+  const {
+    conversations,
+    isReady,
+    appendMessage,
+    markRead,
+  } = useLocalData();
   const { palette } = useTheme();
+  const [draft, setDraft] = useState('');
+  const listRef = useRef<FlatList<LocalChatMessage>>(null);
+
+  const conversation = conversations.find(
+    (item) => item.id === conversationId,
+  );
+  const messages = conversation?.messages ?? [];
+
+  useEffect(() => {
+    if (isReady && conversationId) {
+      markRead(conversationId);
+    }
+  }, [conversationId, isReady, markRead]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      listRef.current?.scrollToEnd({ animated: true });
+    }
+  }, [messages.length]);
 
   const send = () => {
-    const text = draft.trim();
-    if (!text) return;
-
-    setMessages((previous) => [
-      ...previous,
-      {
-        id: Date.now().toString(),
-        text,
-        time: new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-        mine: true,
-        status: 'sent',
-      },
-    ]);
+    if (!conversationId || !draft.trim()) return;
+    appendMessage(conversationId, draft);
     setDraft('');
   };
+
+  if (!isReady) {
+    return (
+      <Screen>
+        <View style={styles.state}>
+          <ActivityIndicator color={palette.accent} />
+          <Animated.Text style={[styles.stateText, { color: palette.muted }]}>
+            Opening local chat…
+          </Animated.Text>
+        </View>
+      </Screen>
+    );
+  }
+
+  if (!conversation) {
+    return (
+      <Screen>
+        <View style={styles.state}>
+          <Animated.Text style={[styles.missingTitle, { color: palette.text }]}>
+            Conversation not found
+          </Animated.Text>
+          <Animated.Text style={[styles.stateText, { color: palette.muted }]}>
+            This chat may have been removed from local storage.
+          </Animated.Text>
+          <AppButton
+            label="Back to chats"
+            onPress={() => router.replace('/home')}
+          />
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen padded={false} contentStyle={styles.screen}>
@@ -77,25 +96,41 @@ export default function ConversationScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <View style={styles.top}>
-          <ConversationHeader name={name} initials={initials} color={color} />
+          <ConversationHeader
+            name={conversation.name}
+            initials={conversation.initials}
+            color={conversation.color}
+          />
         </View>
 
         <View style={styles.disclaimer}>
           <NeumorphicSurface inset style={styles.notice}>
             <Animated.Text style={[styles.noticeText, { color: palette.muted }]}>
-              Prototype conversation · Messages are stored locally in memory and are not encrypted.
+              Local prototype · Stored on this device only. Messages are not encrypted or sent over a network.
             </Animated.Text>
           </NeumorphicSurface>
         </View>
 
-        <FlatList
-          data={messages}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <MessageBubble message={item} />}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        />
+        {messages.length === 0 ? (
+          <View style={styles.empty}>
+            <Animated.Text style={[styles.emptyTitle, { color: palette.text }]}>
+              Start the conversation
+            </Animated.Text>
+            <Animated.Text style={[styles.emptyBody, { color: palette.muted }]}>
+              Messages you write here are saved locally on this device.
+            </Animated.Text>
+          </View>
+        ) : (
+          <FlatList
+            ref={listRef}
+            data={messages}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <MessageBubble message={item} />}
+            contentContainerStyle={styles.list}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          />
+        )}
 
         <View style={styles.composer}>
           <MessageComposer
@@ -133,5 +168,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     flexGrow: 1,
   },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingHorizontal: 30,
+  },
+  emptyTitle: { fontSize: 16, fontWeight: '600' },
+  emptyBody: { fontSize: 12, lineHeight: 18, textAlign: 'center' },
   composer: { paddingHorizontal: 0 },
+  state: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 14,
+  },
+  stateText: { fontSize: 12, textAlign: 'center' },
+  missingTitle: { fontSize: 18, fontWeight: '600' },
 });
