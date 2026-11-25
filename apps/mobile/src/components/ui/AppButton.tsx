@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { radius } from '../../theme/tokens';
 import { NeumorphicSurface } from './NeumorphicSurface';
 
 type Props = {
@@ -87,15 +86,15 @@ export function AppButton({
 const styles = StyleSheet.create({
   wrapper: { width: '100%' },
   surface: {
-    minHeight: 54,
-    borderRadius: radius.md,
-    paddingHorizontal: 20,
+    minHeight: 50,
+    borderRadius: 16,
+    paddingHorizontal: 18,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  label: { fontSize: 14, fontWeight: '700', letterSpacing: 0.2 },
-  right: { fontSize: 20, fontWeight: '500' },
+  label: { fontSize: 13, fontWeight: '700', letterSpacing: 0.1 },
+  right: { fontSize: 19, fontWeight: '500' },
   ghostLabel: {
     minHeight: 42,
     textAlign: 'center',
