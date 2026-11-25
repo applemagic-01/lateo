@@ -20,10 +20,12 @@ export function MessageComposer({
   value,
   onChangeText,
   onSend,
+  disabled = false,
 }: {
   value: string;
   onChangeText: (text: string) => void;
   onSend: () => void;
+  disabled?: boolean;
 }) {
   const { palette } = useTheme();
   const [phase, setPhase] = useState<SendPhase>('idle');
@@ -39,7 +41,7 @@ export function MessageComposer({
 
   const scrambleTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hasMessage = value.trim().length > 0;
+  const hasMessage = value.trim().length > 0 && !disabled;
 
   const clearTimers = useCallback(() => {
     if (scrambleTimer.current) {
@@ -197,9 +199,10 @@ export function MessageComposer({
         <TextInput
           value={value}
           onChangeText={onChangeText}
-          placeholder="Write a message…"
+          placeholder={disabled ? 'Unblock this conversation to send messages' : 'Write a message…'}
           placeholderTextColor={palette.muted}
           multiline
+          editable={!disabled}
           maxLength={4000}
           style={[styles.input, { color: palette.text }]}
           returnKeyType="send"
