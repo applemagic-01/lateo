@@ -257,33 +257,35 @@ export function MessageComposer({
                   },
                 ]}
               >
-                <Animated.View
-                  pointerEvents="none"
-                  style={[
-                    styles.sheen,
-                    {
-                      opacity: phase === 'sending' ? 0.65 : 0,
-                      transform: [
-                        { translateX: sheenTranslate },
-                        { rotate: '22deg' },
-                      ],
-                    },
-                  ]}
-                />
+                <View style={styles.sendClip}>
+                  <Animated.View
+                    pointerEvents="none"
+                    style={[
+                      styles.sheen,
+                      {
+                        opacity: phase === 'sending' ? 0.65 : 0,
+                        transform: [
+                          { translateX: sheenTranslate },
+                          { rotate: '22deg' },
+                        ],
+                      },
+                    ]}
+                  />
 
-                <Animated.Text
-                  numberOfLines={1}
-                  style={[
-                    styles.sendText,
-                    {
-                      color: palette.accentText,
-                      transform: [{ rotate: rotation }],
-                    },
-                    phase === 'sending' && styles.sendingText,
-                  ]}
-                >
-                  {buttonText}
-                </Animated.Text>
+                  <Animated.Text
+                    numberOfLines={1}
+                    style={[
+                      styles.sendText,
+                      {
+                        color: palette.accentText,
+                        transform: [{ rotate: rotation }],
+                      },
+                      phase === 'sending' && styles.sendingText,
+                    ]}
+                  >
+                    {buttonText}
+                  </Animated.Text>
+                </View>
               </NeumorphicSurface>
             </AnimatedPressable>
           </Animated.View>
@@ -334,16 +336,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  sendClip: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    borderRadius: 24,
     overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   sendText: {
     fontSize: 23,
     fontWeight: '800',
+    fontFamily: 'monospace',
     textAlign: 'center',
     includeFontPadding: false,
   },
   sendingText: {
     fontSize: 11,
+    fontFamily: 'monospace',
     letterSpacing: 1.8,
     fontWeight: '800',
   },
