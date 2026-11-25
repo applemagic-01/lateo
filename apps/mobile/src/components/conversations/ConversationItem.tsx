@@ -15,11 +15,11 @@ export type Conversation = {
 export function ConversationItem({
   item,
   onPress,
-  onMore,
+  onLongPress,
 }: {
   item: Conversation;
   onPress?: () => void;
-  onMore?: () => void;
+  onLongPress?: () => void;
 }) {
   const { palette } = useTheme();
 
@@ -28,7 +28,16 @@ export function ConversationItem({
       <Pressable
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel={`Open conversation with ${item.name}`}
+        accessibilityLabel={`Conversation with ${item.name}`}
+        accessibilityHint="Tap to open this chat. Touch and hold for conversation options."
+        accessibilityActions={[{ name: 'showOptions', label: 'Conversation options' }]}
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === 'showOptions') {
+            onLongPress?.();
+          }
+        }}
+        onLongPress={onLongPress}
+        delayLongPress={380}
         style={({ pressed }) => [styles.main, pressed && styles.pressed]}
       >
         <NeumorphicSurface raised style={styles.avatar}>
@@ -66,17 +75,6 @@ export function ConversationItem({
         ) : null}
       </Pressable>
 
-      <Pressable
-        onPress={onMore}
-        accessibilityRole="button"
-        accessibilityLabel={`Manage conversation with ${item.name}`}
-        hitSlop={8}
-        style={styles.moreHit}
-      >
-        <Animated.Text style={[styles.moreText, { color: palette.muted }]}>
-          ···
-        </Animated.Text>
-      </Pressable>
     </View>
   );
 }
@@ -124,24 +122,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   unreadText: { fontSize: 10, fontWeight: '700' },
-  moreHit: {
-    width: 32,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  moreButton: {
-    width: 32,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  moreText: {
-    fontSize: 17,
-    lineHeight: 20,
-    letterSpacing: 1,
-    textAlign: 'center',
-  },
   pressed: { opacity: 0.72, transform: [{ scale: 0.99 }] },
 });
