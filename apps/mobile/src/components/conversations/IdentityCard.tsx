@@ -12,19 +12,11 @@ export function IdentityCard({
 
   return (
     <NeumorphicSurface style={styles.card} raised>
-      <View
-        style={[
-          styles.mark,
-          {
-            backgroundColor: palette.surfaceAlt,
-            borderColor: palette.border,
-          },
-        ]}
-      >
+      <NeumorphicSurface raised style={styles.mark}>
         <Animated.Text style={[styles.glyph, { color: palette.accent }]}>
           ◈
         </Animated.Text>
-      </View>
+      </NeumorphicSurface>
 
       <View style={styles.info}>
         <Animated.Text style={[styles.label, { color: palette.muted }]}>
@@ -64,7 +56,6 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 13,
-    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
