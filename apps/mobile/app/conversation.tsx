@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Screen } from '../src/components/ui/Screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { NeumorphicSurface } from '../src/components/ui/NeumorphicSurface';
 import { ConversationHeader } from '../src/components/messaging/ConversationHeader';
 import { MessageBubble } from '../src/components/messaging/MessageBubble';
@@ -47,7 +47,9 @@ export default function ConversationScreen() {
 
   useEffect(() => {
     if (messages.length > 0) {
-      listRef.current?.scrollToEnd({ animated: true });
+      requestAnimationFrame(() => {
+        listRef.current?.scrollToEnd({ animated: true });
+      });
     }
   }, [messages.length]);
 
@@ -59,20 +61,20 @@ export default function ConversationScreen() {
 
   if (!isReady) {
     return (
-      <Screen>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.background }]}>
         <View style={styles.state}>
           <ActivityIndicator color={palette.accent} />
           <Animated.Text style={[styles.stateText, { color: palette.muted }]}>
             Opening local chat…
           </Animated.Text>
         </View>
-      </Screen>
+      </SafeAreaView>
     );
   }
 
   if (!conversation) {
     return (
-      <Screen>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.background }]}>
         <View style={styles.state}>
           <Animated.Text style={[styles.missingTitle, { color: palette.text }]}>
             Conversation not found
@@ -85,74 +87,93 @@ export default function ConversationScreen() {
             onPress={() => router.replace('/home')}
           />
         </View>
-      </Screen>
+      </SafeAreaView>
     );
   }
 
   return (
-    <Screen padded={false} contentStyle={styles.screen}>
+    <SafeAreaView
+      style={[styles.safeArea, { backgroundColor: palette.background }]}
+      edges={['top', 'left', 'right', 'bottom']}
+    >
       <KeyboardAvoidingView
         style={styles.keyboard}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={0}
       >
-        <View style={styles.top}>
-          <ConversationHeader
-            name={conversation.name}
-            initials={conversation.initials}
-            color={conversation.color}
-          />
-        </View>
-
-        <View style={styles.disclaimer}>
-          <NeumorphicSurface inset style={styles.notice}>
-            <Animated.Text style={[styles.noticeText, { color: palette.muted }]}>
-              Local prototype · Stored on this device only. Messages are not encrypted or sent over a network.
-            </Animated.Text>
-          </NeumorphicSurface>
-        </View>
-
-        {messages.length === 0 ? (
-          <View style={styles.empty}>
-            <Animated.Text style={[styles.emptyTitle, { color: palette.text }]}>
-              Start the conversation
-            </Animated.Text>
-            <Animated.Text style={[styles.emptyBody, { color: palette.muted }]}>
-              Messages you write here are saved locally on this device.
-            </Animated.Text>
+        <View style={styles.layout}>
+          <View style={styles.top}>
+            <ConversationHeader
+              name={conversation.name}
+              initials={conversation.initials}
+              color={conversation.color}
+            />
           </View>
-        ) : (
-          <FlatList
-            ref={listRef}
-            data={messages}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <MessageBubble message={item} />}
-            contentContainerStyle={styles.list}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-          />
-        )}
 
-        <View style={styles.composer}>
-          <MessageComposer
-            value={draft}
-            onChangeText={setDraft}
-            onSend={send}
-          />
+          <View style={styles.disclaimer}>
+            <NeumorphicSurface inset style={styles.notice}>
+              <Animated.Text style={[styles.noticeText, { color: palette.muted }]}>
+                Local prototype · Stored on this device only. Messages are not encrypted or sent over a network.
+              </Animated.Text>
+            </NeumorphicSurface>
+          </View>
+
+          {messages.length === 0 ? (
+            <View style={styles.empty}>
+              <Animated.Text style={[styles.emptyTitle, { color: palette.text }]}>
+                Start the conversation
+              </Animated.Text>
+              <Animated.Text style={[styles.emptyBody, { color: palette.muted }]}>
+                Messages you write here are saved locally on this device.
+              </Animated.Text>
+            </View>
+          ) : (
+            <FlatList
+              ref={listRef}
+              style={styles.messageList}
+              data={messages}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => <MessageBubble message={item} />}
+              contentContainerStyle={styles.list}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="interactive"
+            />
+          )}
+
+          <View style={styles.composer}>
+            <MessageComposer
+              value={draft}
+              onChangeText={setDraft}
+              onSend={send}
+            />
+          </View>
         </View>
       </KeyboardAvoidingView>
-    </Screen>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
+    flex: 1,
+  },
+  keyboard: {
+    flex: 1,
+  },
+  layout: {
+    flex: 1,
     paddingHorizontal: 18,
     paddingTop: 8,
-    paddingBottom: 6,
+    paddingBottom: 4,
   },
-  keyboard: { flex: 1 },
-  top: { paddingHorizontal: 0 },
-  disclaimer: { paddingHorizontal: 0, paddingBottom: 8 },
+  top: {
+    flexShrink: 0,
+  },
+  disclaimer: {
+    flexShrink: 0,
+    paddingBottom: 8,
+  },
   notice: {
     paddingVertical: 9,
     paddingHorizontal: 12,
@@ -163,9 +184,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 15,
   },
+  messageList: {
+    flex: 1,
+  },
   list: {
     paddingVertical: 12,
-    paddingHorizontal: 0,
     flexGrow: 1,
   },
   empty: {
@@ -175,15 +198,32 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 30,
   },
-  emptyTitle: { fontSize: 16, fontWeight: '600' },
-  emptyBody: { fontSize: 12, lineHeight: 18, textAlign: 'center' },
-  composer: { paddingHorizontal: 0 },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  emptyBody: {
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+  composer: {
+    flexShrink: 0,
+    paddingTop: 4,
+  },
   state: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 14,
+    paddingHorizontal: 24,
   },
-  stateText: { fontSize: 12, textAlign: 'center' },
-  missingTitle: { fontSize: 18, fontWeight: '600' },
+  stateText: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  missingTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
 });
