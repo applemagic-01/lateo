@@ -35,6 +35,10 @@ type LocalDataContextValue = {
   isReady: boolean;
   persistenceWarning: boolean;
   createConversation: (name: string) => string;
+  renameConversation: (conversationId: string, name: string) => void;
+  deleteConversation: (conversationId: string) => void;
+  undoDelete: () => boolean;
+  clearAllConversations: () => void;
   appendMessage: (conversationId: string, text: string) => void;
   markRead: (conversationId: string) => void;
 };
@@ -129,6 +133,10 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
   const [canPersist, setCanPersist] = useState(false);
   const [persistenceWarning, setPersistenceWarning] = useState(false);
   const writeQueue = useRef<Promise<void>>(Promise.resolve());
+  const recentlyDeleted = useRef<{
+    conversation: LocalConversation;
+    index: number;
+  } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -202,6 +210,72 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
     return id;
   }, []);
 
+  const renameConversation = useCallback(
+    (conversationId: string, rawName: string) => {
+      const name = rawName.trim();
+      if (!name) return;
+
+      const initials =
+        name
+          .split(/\\s+/)
+          .slice(0, 2)
+          .map((part) => part[0])
+          .join('')
+          .toUpperCase() || 'L';
+
+      setConversations((current) =>
+        current.map((conversation) =>
+          conversation.id === conversationId
+            ? { ...conversation, name, initials }
+            : conversation,
+        ),
+      );
+    },
+    [],
+  );
+
+  const deleteConversation = useCallback((conversationId: string) => {
+    setConversations((current) => {
+      const index = current.findIndex(
+        (conversation) => conversation.id === conversationId,
+      );
+      if (index < 0) return current;
+
+      recentlyDeleted.current = {
+        conversation: current[index],
+        index,
+      };
+
+      return current.filter(
+        (conversation) => conversation.id !== conversationId,
+      );
+    });
+  }, []);
+
+  const undoDelete = useCallback(() => {
+    const deleted = recentlyDeleted.current;
+    if (!deleted) return false;
+
+    setConversations((current) => {
+      if (current.some((item) => item.id === deleted.conversation.id)) {
+        return current;
+      }
+
+      const restored = [...current];
+      const index = Math.min(deleted.index, restored.length);
+      restored.splice(index, 0, deleted.conversation);
+      return restored;
+    });
+
+    recentlyDeleted.current = null;
+    return true;
+  }, []);
+
+  const clearAllConversations = useCallback(() => {
+    recentlyDeleted.current = null;
+    setConversations([]);
+  }, []);
+
   const appendMessage = useCallback((conversationId: string, rawText: string) => {
     const text = rawText.trim();
     if (!text) return;
@@ -247,6 +321,10 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
       isReady,
       persistenceWarning,
       createConversation,
+      renameConversation,
+      deleteConversation,
+      undoDelete,
+      clearAllConversations,
       appendMessage,
       markRead,
     }),
@@ -255,6 +333,10 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
       isReady,
       persistenceWarning,
       createConversation,
+      renameConversation,
+      deleteConversation,
+      undoDelete,
+      clearAllConversations,
       appendMessage,
       markRead,
     ],
