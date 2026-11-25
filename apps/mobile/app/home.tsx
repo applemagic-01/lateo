@@ -235,7 +235,7 @@ export default function HomeScreen() {
                     params: { id: item.id },
                   })
                 }
-                onMore={() => openManagement(item)}
+                onLongPress={() => openManagement(item)}
               />
             ))
           ) : (
