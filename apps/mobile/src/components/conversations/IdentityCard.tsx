@@ -12,9 +12,20 @@ export function IdentityCard({
 
   return (
     <NeumorphicSurface style={styles.card} raised>
-      <NeumorphicSurface inset style={styles.mark}>
-        <Animated.Text style={[styles.glyph, { color: palette.accent }]}>◈</Animated.Text>
-      </NeumorphicSurface>
+      <View
+        style={[
+          styles.mark,
+          {
+            backgroundColor: palette.surfaceAlt,
+            borderColor: palette.border,
+          },
+        ]}
+      >
+        <Animated.Text style={[styles.glyph, { color: palette.accent }]}>
+          ◈
+        </Animated.Text>
+      </View>
+
       <View style={styles.info}>
         <Animated.Text style={[styles.label, { color: palette.muted }]}>
           ANONYMOUS IDENTITY
@@ -22,11 +33,20 @@ export function IdentityCard({
         <Animated.Text style={[styles.name, { color: palette.text }]}>
           {identityName}
         </Animated.Text>
-        <Animated.Text style={[styles.hint, { color: palette.muted }]}>
+        <Animated.Text
+          numberOfLines={1}
+          style={[styles.hint, { color: palette.muted }]}
+        >
           {identityHint}
         </Animated.Text>
       </View>
-      <View style={[styles.status, { backgroundColor: palette.success }]} />
+
+      <View style={styles.statusWrap}>
+        <View style={[styles.status, { backgroundColor: palette.success }]} />
+        <Animated.Text style={[styles.statusText, { color: palette.muted }]}>
+          ACTIVE
+        </Animated.Text>
+      </View>
     </NeumorphicSurface>
   );
 }
@@ -35,21 +55,30 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 17,
-    gap: 14,
-    borderRadius: 24,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    gap: 12,
+    borderRadius: 20,
   },
   mark: {
-    width: 46,
-    height: 46,
-    borderRadius: 16,
+    width: 38,
+    height: 38,
+    borderRadius: 13,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  glyph: { fontSize: 20 },
-  info: { flex: 1, gap: 4 },
-  label: { fontSize: 9, letterSpacing: 1.7, fontWeight: '700' },
-  name: { fontSize: 15, fontWeight: '700' },
-  hint: { fontSize: 10, lineHeight: 14 },
-  status: { width: 7, height: 7, borderRadius: 4 },
+  glyph: { fontSize: 19 },
+  info: { flex: 1, minWidth: 0, gap: 3 },
+  label: { fontSize: 8, letterSpacing: 1.4, fontWeight: '700' },
+  name: { fontSize: 14, fontWeight: '700' },
+  hint: { fontSize: 9, lineHeight: 12 },
+  statusWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    minWidth: 34,
+  },
+  status: { width: 6, height: 6, borderRadius: 3 },
+  statusText: { fontSize: 7, letterSpacing: 0.7, fontWeight: '700' },
 });
