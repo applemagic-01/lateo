@@ -7,13 +7,11 @@ import { NeumorphicSurface } from '../ui/NeumorphicSurface';
 export function ConversationHeader({
   name,
   initials,
-  color,
   onAvatarPress,
   statusLabel = 'Anonymous connection',
 }: {
   name: string;
   initials: string;
-  color: string;
   onAvatarPress?: () => void;
   statusLabel?: string;
 }) {
