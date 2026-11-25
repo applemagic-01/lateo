@@ -1,6 +1,5 @@
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
-import { NeumorphicSurface } from '../ui/NeumorphicSurface';
 
 export type Conversation = {
   id: string;
@@ -31,11 +30,11 @@ export function ConversationItem({
         accessibilityLabel={`Open conversation with ${item.name}`}
         style={({ pressed }) => [styles.main, pressed && styles.pressed]}
       >
-        <NeumorphicSurface raised style={[styles.avatar, { backgroundColor: item.color }]}>
+        <View style={[styles.avatar, { backgroundColor: item.color, borderColor: palette.border }]}>
           <Text style={[styles.initial, { color: palette.text }]}>
             {item.initials}
           </Text>
-        </NeumorphicSurface>
+        </View>
 
         <View style={styles.content}>
           <View style={styles.nameRow}>
@@ -73,11 +72,9 @@ export function ConversationItem({
         hitSlop={8}
         style={styles.moreHit}
       >
-        <NeumorphicSurface inset style={styles.moreButton}>
-          <Animated.Text style={[styles.moreText, { color: palette.muted }]}>
-            ···
-          </Animated.Text>
-        </NeumorphicSurface>
+        <Animated.Text style={[styles.moreText, { color: palette.muted }]}>
+          ···
+        </Animated.Text>
       </Pressable>
     </View>
   );
@@ -95,14 +92,15 @@ const styles = StyleSheet.create({
     minWidth: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 2,
     gap: 13,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -127,23 +125,23 @@ const styles = StyleSheet.create({
   },
   unreadText: { fontSize: 10, fontWeight: '700' },
   moreHit: {
-    width: 38,
-    height: 48,
+    width: 32,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
   moreButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 32,
+    height: 36,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },
   moreText: {
     fontSize: 17,
-    lineHeight: 18,
+    lineHeight: 20,
     letterSpacing: 1,
-    marginTop: -7,
+    textAlign: 'center',
   },
   pressed: { opacity: 0.72, transform: [{ scale: 0.99 }] },
 });
