@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Pressable,
@@ -41,7 +41,7 @@ export function MessageComposer({
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasMessage = value.trim().length > 0;
 
-  const clearTimers = () => {
+  const clearTimers = useCallback(() => {
     if (scrambleTimer.current) {
       clearInterval(scrambleTimer.current);
       scrambleTimer.current = null;
@@ -50,9 +50,9 @@ export function MessageComposer({
       clearTimeout(resetTimer.current);
       resetTimer.current = null;
     }
-  };
+  }, []);
 
-  useEffect(() => clearTimers, []);
+  useEffect(() => clearTimers, [clearTimers]);
 
   const animateSend = () => {
     if (!hasMessage || phase !== 'idle') return;
