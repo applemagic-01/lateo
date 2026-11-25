@@ -9,11 +9,13 @@ export function ConversationHeader({
   initials,
   color,
   onAvatarPress,
+  statusLabel = 'Anonymous connection',
 }: {
   name: string;
   initials: string;
   color: string;
   onAvatarPress?: () => void;
+  statusLabel?: string;
 }) {
   const { palette } = useTheme();
 
