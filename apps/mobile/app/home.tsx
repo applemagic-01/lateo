@@ -141,11 +141,9 @@ export default function HomeScreen() {
             accessibilityLabel="Open settings"
             onPress={() => router.push('/settings')}
           >
-            <NeumorphicSurface inset style={styles.settings}>
-              <Animated.Text style={[styles.settingsText, { color: palette.muted }]}>
-                ⚙
-              </Animated.Text>
-            </NeumorphicSurface>
+            <Animated.Text style={[styles.settingsText, { color: palette.muted }]}>
+              ⚙
+            </Animated.Text>
           </Pressable>
         </View>
       </View>
@@ -213,11 +211,12 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView
+        style={styles.scroll}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <NeumorphicSurface inset style={styles.listSurface}>
+        <View style={styles.listSurface}>
           {!isReady ? (
             <View style={styles.loading}>
               <ActivityIndicator color={palette.accent} />
@@ -263,17 +262,6 @@ export default function HomeScreen() {
               ) : null}
             </View>
           )}
-        </NeumorphicSurface>
-
-        <View style={styles.quietHint}>
-          <Animated.Text style={[styles.quietTitle, { color: palette.muted }]}>
-            Quiet by default
-          </Animated.Text>
-          <Animated.Text style={[styles.quietBody, { color: palette.muted }]}>
-            {persistenceWarning
-              ? 'Local storage could not be read. Changes may not survive a restart.'
-              : 'Your prototype chats stay on this device. They are not sent to anyone.'}
-          </Animated.Text>
         </View>
       </ScrollView>
 
@@ -449,23 +437,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 22,
+    marginBottom: 17,
   },
   heading: { gap: 7 },
   title: { fontSize: 31, letterSpacing: -1, fontWeight: '600' },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  settings: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  settingsText: { fontSize: 17 },
+  settings: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  settingsText: { fontSize: 18, padding: 10 },
   search: {
-    minHeight: 48,
-    borderRadius: 24,
-    marginTop: 19,
+    minHeight: 46,
+    borderRadius: 23,
+    marginTop: 14,
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
@@ -491,17 +473,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 9,
-    marginTop: 25,
-    marginBottom: 12,
+    marginTop: 19,
+    marginBottom: 7,
   },
   sectionTitle: { fontSize: 15, fontWeight: '700' },
   count: { fontSize: 10, letterSpacing: 1 },
-  list: { flexGrow: 1, paddingBottom: 12 },
-  listSurface: {
-    borderRadius: 23,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-  },
+  scroll: { flex: 1, marginTop: 0 },
+  list: { flexGrow: 1, paddingBottom: 8 },
+  listSurface: { paddingHorizontal: 0, paddingVertical: 0 },
   loading: { minHeight: 150, alignItems: 'center', justifyContent: 'center', gap: 10 },
   emptyHint: { paddingVertical: 30, paddingHorizontal: 12, alignItems: 'center', gap: 9 },
   emptyOrb: {
@@ -516,15 +495,12 @@ const styles = StyleSheet.create({
   emptyTitle: { fontSize: 14, fontWeight: '700', textAlign: 'center' },
   emptyBody: { fontSize: 11, textAlign: 'center', lineHeight: 17, maxWidth: 270 },
   clearFilter: { fontSize: 11, fontWeight: '700', padding: 6 },
-  quietHint: { alignItems: 'center', paddingVertical: 18, gap: 5 },
-  quietTitle: { fontSize: 11, fontWeight: '600' },
-  quietBody: { fontSize: 10, textAlign: 'center', lineHeight: 15, maxWidth: 280 },
   bottomNote: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 7,
-    paddingTop: 13,
+    paddingTop: 8,
   },
   lockDot: { width: 5, height: 5, borderRadius: 3 },
   bottomText: { fontSize: 9 },
