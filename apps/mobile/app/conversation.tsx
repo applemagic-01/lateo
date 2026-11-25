@@ -314,7 +314,7 @@ export default function ConversationScreen() {
                 <Pressable
                   onPress={() => setActionPanel('report')}
                   disabled={Boolean(conversation.reportedAt)}
-                  style={[styles.actionRow, conversation.reportedAt && styles.disabledRow]}
+                  style={[styles.actionRow, conversation.reportedAt ? styles.disabledRow : undefined]}
                 >
                   <NeumorphicSurface inset style={styles.actionIcon}>
                     <Animated.Text style={[styles.actionGlyph, { color: palette.warning }]}>
