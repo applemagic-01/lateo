@@ -159,7 +159,6 @@ export default function ConversationScreen() {
             <ConversationHeader
               name={conversation.name}
               initials={conversation.initials}
-              color={conversation.color}
               onAvatarPress={openActions}
               statusLabel={
                 conversation.isBlocked
