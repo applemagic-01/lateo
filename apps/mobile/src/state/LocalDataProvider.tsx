@@ -28,6 +28,10 @@ export type LocalConversation = {
   unread: number;
   updatedAt: number;
   messages: LocalChatMessage[];
+  isMuted?: boolean;
+  isBlocked?: boolean;
+  reportReason?: string;
+  reportedAt?: number;
 };
 
 type LocalDataContextValue = {
@@ -39,6 +43,9 @@ type LocalDataContextValue = {
   deleteConversation: (conversationId: string) => void;
   undoDelete: () => boolean;
   clearAllConversations: () => void;
+  setConversationMuted: (conversationId: string, muted: boolean) => void;
+  setConversationBlocked: (conversationId: string, blocked: boolean) => void;
+  submitLocalReport: (conversationId: string, reason: string) => void;
   appendMessage: (conversationId: string, text: string) => void;
   markRead: (conversationId: string) => void;
 };
@@ -113,6 +120,10 @@ function isLocalConversationArray(value: unknown): value is LocalConversation[] 
         typeof conversation.color === 'string' &&
         typeof conversation.unread === 'number' &&
         typeof conversation.updatedAt === 'number' &&
+        (conversation.isMuted === undefined || typeof conversation.isMuted === 'boolean') &&
+        (conversation.isBlocked === undefined || typeof conversation.isBlocked === 'boolean') &&
+        (conversation.reportReason === undefined || typeof conversation.reportReason === 'string') &&
+        (conversation.reportedAt === undefined || typeof conversation.reportedAt === 'number') &&
         Array.isArray(conversation.messages) &&
         conversation.messages.every(isLocalMessage)
       );
@@ -276,6 +287,52 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
     setConversations([]);
   }, []);
 
+  const setConversationMuted = useCallback(
+    (conversationId: string, muted: boolean) => {
+      setConversations((current) =>
+        current.map((conversation) =>
+          conversation.id === conversationId
+            ? { ...conversation, isMuted: muted }
+            : conversation,
+        ),
+      );
+    },
+    [],
+  );
+
+  const setConversationBlocked = useCallback(
+    (conversationId: string, blocked: boolean) => {
+      setConversations((current) =>
+        current.map((conversation) =>
+          conversation.id === conversationId
+            ? { ...conversation, isBlocked: blocked }
+            : conversation,
+        ),
+      );
+    },
+    [],
+  );
+
+  const submitLocalReport = useCallback(
+    (conversationId: string, reason: string) => {
+      const normalizedReason = reason.trim();
+      if (!normalizedReason) return;
+
+      setConversations((current) =>
+        current.map((conversation) =>
+          conversation.id === conversationId && !conversation.isBlocked
+            ? {
+                ...conversation,
+                reportReason: normalizedReason,
+                reportedAt: Date.now(),
+              }
+            : conversation,
+        ),
+      );
+    },
+    [],
+  );
+
   const appendMessage = useCallback((conversationId: string, rawText: string) => {
     const text = rawText.trim();
     if (!text) return;
@@ -325,6 +382,9 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
       deleteConversation,
       undoDelete,
       clearAllConversations,
+      setConversationMuted,
+      setConversationBlocked,
+      submitLocalReport,
       appendMessage,
       markRead,
     }),
@@ -337,6 +397,9 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
       deleteConversation,
       undoDelete,
       clearAllConversations,
+      setConversationMuted,
+      setConversationBlocked,
+      submitLocalReport,
       appendMessage,
       markRead,
     ],
