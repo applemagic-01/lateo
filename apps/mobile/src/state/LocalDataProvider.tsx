@@ -126,6 +126,7 @@ function clockTime(date: Date): string {
 export function LocalDataProvider({ children }: PropsWithChildren) {
   const [conversations, setConversations] = useState<LocalConversation[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const [canPersist, setCanPersist] = useState(false);
   const [persistenceWarning, setPersistenceWarning] = useState(false);
   const writeQueue = useRef<Promise<void>>(Promise.resolve());
 
@@ -139,11 +140,16 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
 
         if (stored) {
           const parsed: unknown = JSON.parse(stored);
-          setConversations(
-            isLocalConversationArray(parsed) ? parsed : makeSeedConversations(),
-          );
+          if (isLocalConversationArray(parsed)) {
+            setConversations(parsed);
+            setCanPersist(true);
+          } else {
+            setConversations(makeSeedConversations());
+            setPersistenceWarning(true);
+          }
         } else {
           setConversations(makeSeedConversations());
+          setCanPersist(true);
         }
       } catch {
         if (!active) return;
@@ -162,14 +168,14 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
   }, []);
 
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || !canPersist) return;
 
     const snapshot = JSON.stringify(conversations);
     writeQueue.current = writeQueue.current
       .catch(() => undefined)
       .then(() => AsyncStorage.setItem(STORAGE_KEY, snapshot))
       .catch(() => setPersistenceWarning(true));
-  }, [conversations, isReady]);
+  }, [conversations, isReady, canPersist]);
 
   const createConversation = useCallback((rawName: string) => {
     const name = rawName.trim() || 'New connection';
@@ -210,16 +216,18 @@ export function LocalDataProvider({ children }: PropsWithChildren) {
     };
 
     setConversations((current) =>
-      current.map((conversation) =>
-        conversation.id === conversationId
-          ? {
-              ...conversation,
-              messages: [...conversation.messages, message],
-              updatedAt: createdAt,
-              unread: 0,
-            }
-          : conversation,
-      ),
+      current
+        .map((conversation) =>
+          conversation.id === conversationId
+            ? {
+                ...conversation,
+                messages: [...conversation.messages, message],
+                updatedAt: createdAt,
+                unread: 0,
+              }
+            : conversation,
+        )
+        .sort((left, right) => right.updatedAt - left.updatedAt),
     );
   }, []);
 
