@@ -19,7 +19,7 @@ export function NeumorphicSurface({
   inset = false,
   raised = false,
 }: Props) {
-  const { palette } = useTheme();
+  const { palette, mode } = useTheme();
   const flattenedStyle = StyleSheet.flatten(style);
   const borderRadius =
     flattenedStyle?.borderRadius ?? (inset ? 18 : raised ? 24 : 22);
@@ -36,12 +36,16 @@ export function NeumorphicSurface({
           borderRightColor: inset ? palette.highlight : palette.border,
           borderBottomColor: inset ? palette.highlight : palette.border,
           shadowColor: palette.shadow,
-          shadowOpacity: inset ? 0.08 : raised ? 0.28 : 0.17,
+          shadowOpacity: mode === 'light'
+            ? inset ? 0.18 : raised ? 0.58 : 0.32
+            : inset ? 0.08 : raised ? 0.28 : 0.17,
           shadowOffset: inset
-            ? { width: -1, height: -1 }
-            : { width: 4, height: 5 },
-          shadowRadius: inset ? 3 : raised ? 8 : 6,
-          elevation: inset ? 0 : raised ? 4 : 2,
+            ? { width: mode === 'light' ? -2 : -1, height: mode === 'light' ? -2 : -1 }
+            : { width: mode === 'light' ? 7 : 4, height: mode === 'light' ? 8 : 5 },
+          shadowRadius: mode === 'light'
+            ? inset ? 5 : raised ? 13 : 9
+            : inset ? 3 : raised ? 8 : 6,
+          elevation: inset ? 0 : mode === 'light' ? raised ? 7 : 4 : raised ? 4 : 2,
         },
         style,
       ]}
