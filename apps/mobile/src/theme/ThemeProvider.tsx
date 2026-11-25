@@ -23,22 +23,22 @@ const dark = {
 };
 
 const light = {
-  background: '#E9E8E6',
-  surface: '#E9E8E6',
-  raised: '#E9E8E6',
-  inset: '#DEDDDA',
-  text: '#292A30',
-  muted: '#74757D',
+  background: '#E4E3E0',
+  surface: '#ECEBE8',
+  raised: '#F0EFEC',
+  inset: '#D9D8D4',
+  text: '#25262C',
+  muted: '#62636C',
   accent: '#C83F49',
   accentSoft: '#C83F49',
   accentText: '#FFFFFF',
-  border: '#D1D0CE',
-  shadow: '#B8B7B4',
-  highlight: '#FFFFFF',
+  border: '#CFCECA',
+  shadow: '#A7A6A1',
+  highlight: '#FCFCFA',
   success: '#397A5B',
   warning: '#986B2B',
   danger: '#B45561',
-  surfaceAlt: '#E1E0DD',
+  surfaceAlt: '#E1E0DC',
 };
 
 type Palette = typeof dark;
