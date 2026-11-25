@@ -1,5 +1,11 @@
 import { useRef } from 'react';
-import { Animated, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import {
+  Animated,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { NeumorphicSurface } from '../ui/NeumorphicSurface';
 
@@ -16,14 +22,46 @@ export function MessageComposer({
 }) {
   const { palette } = useTheme();
   const scale = useRef(new Animated.Value(1)).current;
+  const lift = useRef(new Animated.Value(0)).current;
+  const hasMessage = value.trim().length > 0;
 
-  const press = (to: number) =>
-    Animated.spring(scale, {
-      toValue: to,
-      useNativeDriver: true,
-      speed: 22,
-      bounciness: 3,
-    }).start();
+  const animateSend = () => {
+    if (!hasMessage) return;
+
+    scale.stopAnimation();
+    lift.stopAnimation();
+
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(scale, {
+          toValue: 0.88,
+          duration: 85,
+          useNativeDriver: true,
+        }),
+        Animated.timing(lift, {
+          toValue: 2,
+          duration: 85,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.parallel([
+        Animated.spring(scale, {
+          toValue: 1,
+          useNativeDriver: true,
+          speed: 25,
+          bounciness: 8,
+        }),
+        Animated.spring(lift, {
+          toValue: 0,
+          useNativeDriver: true,
+          speed: 25,
+          bounciness: 7,
+        }),
+      ]),
+    ]).start();
+
+    onSend();
+  };
 
   return (
     <View style={styles.wrap}>
@@ -37,15 +75,30 @@ export function MessageComposer({
           maxLength={4000}
           style={[styles.input, { color: palette.text }]}
           returnKeyType="send"
-          onSubmitEditing={onSend}
+          blurOnSubmit={false}
+          onSubmitEditing={animateSend}
+          accessibilityLabel="Write a message"
         />
-        <Animated.View style={{ transform: [{ scale }] }}>
+
+        <Animated.View
+          style={[
+            styles.sendMotion,
+            {
+              opacity: hasMessage ? 1 : 0.72,
+              transform: [
+                { translateY: lift },
+                { scale },
+              ],
+            },
+          ]}
+        >
           <AnimatedPressable
-            onPress={onSend}
-            onPressIn={() => press(0.9)}
-            onPressOut={() => press(1)}
+            onPress={animateSend}
+            disabled={!hasMessage}
             accessibilityRole="button"
             accessibilityLabel="Send message"
+            accessibilityState={{ disabled: !hasMessage }}
+            hitSlop={6}
           >
             <NeumorphicSurface
               raised
@@ -53,14 +106,16 @@ export function MessageComposer({
                 styles.send,
                 {
                   backgroundColor: palette.accent,
-                  borderTopColor: '#FA858A',
-                  borderLeftColor: '#FA858A',
-                  borderRightColor: '#B83D46',
-                  borderBottomColor: '#B83D46',
+                  borderTopColor: '#F0787F',
+                  borderLeftColor: '#F0787F',
+                  borderRightColor: '#A9343E',
+                  borderBottomColor: '#A9343E',
                 },
               ]}
             >
-              <Animated.Text style={[styles.sendIcon, { color: palette.accentText }]}>
+              <Animated.Text
+                style={[styles.sendIcon, { color: palette.accentText }]}
+              >
                 ↑
               </Animated.Text>
             </NeumorphicSurface>
@@ -72,7 +127,10 @@ export function MessageComposer({
 }
 
 const styles = StyleSheet.create({
-  wrap: { paddingTop: 10, paddingBottom: 6 },
+  wrap: {
+    paddingTop: 10,
+    paddingBottom: 6,
+  },
   shell: {
     minHeight: 58,
     borderRadius: 24,
@@ -90,6 +148,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingVertical: 10,
   },
+  sendMotion: {
+    flexShrink: 0,
+  },
   send: {
     width: 42,
     height: 42,
@@ -97,5 +158,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  sendIcon: { fontSize: 24, fontWeight: '700', marginTop: -2 },
+  sendIcon: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginTop: -2,
+  },
 });
