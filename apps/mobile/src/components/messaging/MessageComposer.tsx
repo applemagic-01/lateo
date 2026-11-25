@@ -208,7 +208,7 @@ export function MessageComposer({
           accessibilityLabel="Write a message"
         />
 
-        <View style={styles.buttonSlot}>
+        <Animated.View style={[styles.buttonSlot, { width: buttonWidth } ]}>
           <Animated.View
             pointerEvents="none"
             style={[
@@ -225,7 +225,6 @@ export function MessageComposer({
             style={[
               styles.buttonMotion,
               {
-                width: buttonWidth,
                 transform: [
                   { translateY: buttonLift },
                   { scale: buttonScale },
@@ -254,7 +253,7 @@ export function MessageComposer({
                     borderLeftColor: '#F0787F',
                     borderRightColor: '#A9343E',
                     borderBottomColor: '#A9343E',
-                    opacity: hasMessage ? 1 : 0.72,
+                    opacity: hasMessage || phase !== 'idle' ? 1 : 0.72,
                   },
                 ]}
               >
@@ -288,7 +287,7 @@ export function MessageComposer({
               </NeumorphicSurface>
             </AnimatedPressable>
           </Animated.View>
-        </View>
+        </Animated.View>
       </NeumorphicSurface>
     </View>
   );
@@ -318,13 +317,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   buttonSlot: {
-    width: 112,
     height: 48,
     flexShrink: 0,
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
   buttonMotion: {
+    width: '100%',
     height: 46,
     alignSelf: 'flex-end',
   },
